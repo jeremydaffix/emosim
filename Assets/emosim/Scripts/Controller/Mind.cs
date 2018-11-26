@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Mind
 {
-    List<SomaticMarker> somaticMemory = new List<SomaticMarker>();
+    
 
 
 

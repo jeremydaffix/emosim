@@ -7,6 +7,11 @@ public class SomaticMarker
     MentalImage mentalImage;
     List<Perception> perceptions = new List<Perception>();
 
+    public SomaticMarker(MentalImage mentalImage)
+    {
+        this.mentalImage = mentalImage;
+    }
+
     public MentalImage MentalImage
     {
         get

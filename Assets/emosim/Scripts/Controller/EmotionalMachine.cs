@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class EmotionalMachine
 {
 
     Person person;
-    
+
+    List<SomaticMarker> somaticMemory = new List<SomaticMarker>();
+
 
     Perception  fastHeartBeat, slowHeartBeat, normalHeartBeat, // heart
                 stomachNormal, wantToVomit, stomachAche, // stomach
@@ -18,9 +21,14 @@ public class EmotionalMachine
                 tastesNormal, tastesGood, tastesBad; // palateSensor
 
 
-    //Emotion fear, pleasure, pain, anger, joy, sadness, pride, shame, stress, sickness;
-    Emotion fear, pleasure, pain, sadness, stress, relaxation, sickness;
+    Emotion fear, pleasure, pain, sadness, stress, relaxation, sickness, neutral;//anger, pride, shame;
 
+    Need health, satiety;
+
+    InteractiveObject  apple, carrot, endive, // food
+                       chanterelle, amanita, // champipis
+                       snake, spider, pig, chicken, // animals
+                       tree, brambles; // obstacles
 
 
 
@@ -85,10 +93,6 @@ public class EmotionalMachine
 
         // emotions
 
-
-        //Emotion fear, pleasure, pain, anger, joy, sadness, pride, shame, stress, sickness;
-
-
         fear = new Emotion("fear", -2);
         fear.AddPerception(fastHeartBeat).AddPerception(stomachAche).AddPerception(normalEyes).AddPerception(stressHormones).AddPerception(frightenedFace).AddPerception(frightenedPosture).AddPerception(looksTerrifying);
 
@@ -109,16 +113,107 @@ public class EmotionalMachine
 
         sickness = new Emotion("sickness", -2);
         sickness.AddPerception(normalHeartBeat).AddPerception(wantToVomit).AddPerception(normalEyes).AddPerception(painHormones).AddPerception(sadFace).AddPerception(closedPosture);
-        
+
+        neutral = new Emotion("neutral", 1);
+        neutral.AddPerception(normalHeartBeat).AddPerception(stomachNormal).AddPerception(normalEyes).AddPerception(noHormones).AddPerception(pokerFace).AddPerception(relaxedPosture);
+
 
 
         // besoins
 
-        // images mentales innées
+        health = new Need("health", 10);
+        satiety = new Need("satiety", 5);
+
+
+        // objets interactifs
+
+        /*InteractiveObject apple, carrot, endive, // food
+                   chanterelle, amanita, // champipis
+                   snake, spider, pig, chicken, // animals
+                   tree, brambles; // obstacles*/
+
+        apple = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD);
+        apple.NeedsSatisfied.Add(satiety, 1);
+        apple.NeedsSatisfied.Add(health, 1);
+
+        apple.TriggerBySight.Add(looksGood);
+        apple.TriggerBySmell.Add(smellsGood);
+        apple.TriggerByTaste.Add(tastesGood);
+
+        apple.TriggerByTaste.Add(pleasureHormones);
+        apple.TriggerByTaste.Add(smilingFace);
+        apple.TriggerByTaste.Add(happyPosture);
+
+
+        carrot = new InteractiveObject("carrot", InteractiveObject.TYPE_FOOD);
+        carrot.NeedsSatisfied.Add(satiety, 1);
+        carrot.NeedsSatisfied.Add(health, 2);
+
+        carrot.TriggerBySight.Add(looksBad);
+        carrot.TriggerBySmell.Add(smellsNormal);
+        carrot.TriggerByTaste.Add(tastesNormal);
+
+
+        endive = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD);
+        endive.NeedsSatisfied.Add(satiety, 2);
+        endive.NeedsSatisfied.Add(health, 3);
+
+        endive.TriggerBySight.Add(looksNormal);
+        endive.TriggerBySmell.Add(smellsBad);
+        endive.TriggerByTaste.Add(tastesBad);
+
+        endive.TriggerByTaste.Add(sadFace);
+        endive.TriggerByTaste.Add(closedPosture);
+
+
+        chanterelle = new InteractiveObject("chanterelle", InteractiveObject.TYPE_MUSHROOM);
+        chanterelle.NeedsSatisfied.Add(satiety, 1);
+        chanterelle.NeedsSatisfied.Add(health, 0);
+
+        chanterelle.TriggerBySight.Add(looksNormal);
+        chanterelle.TriggerBySmell.Add(smellsNormal);
+        chanterelle.TriggerByTaste.Add(tastesGood);
+
+
+        amanita = new InteractiveObject("amanita", InteractiveObject.TYPE_MUSHROOM);
+        amanita.NeedsSatisfied.Add(satiety, 1);
+        amanita.NeedsSatisfied.Add(health, -4);
+
+        amanita.TriggerBySight.Add(looksGood);
+        amanita.TriggerBySmell.Add(smellsNormal);
+        amanita.TriggerByTaste.Add(tastesNormal);
+
+        amanita.TriggerByTaste.Add(wantToVomit);
+        amanita.TriggerByTaste.Add(painHormones);
+        amanita.TriggerByTaste.Add(sadFace);
+        amanita.TriggerByTaste.Add(closedPosture);
+
+        
 
         // marqueurs somatiques innés
+
+        SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, amanita));
+        amanitaSM.Perceptions.Add(wantToVomit);
+        amanitaSM.Perceptions.Add(painHormones);
+        SomaticMemory.Add(amanitaSM);
+
+
+
+        // connaissances (= on sait que, mais sans trigger de perceptions)
+        // (dans mind ???)
+
     }
 
+    public List<SomaticMarker> SomaticMemory
+    {
+        get
+        {
+            return somaticMemory;
+        }
 
-
+        set
+        {
+            somaticMemory = value;
+        }
+    }
 }

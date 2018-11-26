@@ -6,9 +6,9 @@ using System.Collections;
 public class Need
 {
     string name;
-    int currentScore = 5;
+    int currentScore;
 
-    public Need(string _name, int _currentScore)
+    public Need(string _name, int _currentScore = 5)
     {
         Name = _name;
         CurrentScore = _currentScore;

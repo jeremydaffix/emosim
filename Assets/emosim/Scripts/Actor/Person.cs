@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class Person : MonoBehaviour
 {
+    // + tard : faire une factory !!!
+
     Mind mind;
 
     // for perceptions from own body
@@ -26,16 +28,24 @@ public class Person : MonoBehaviour
 
 
 
-    // Use this for initialization
+
     void Start()
     {
         EmotionalMachine = new EmotionalMachine(this);
     }
 
-    // Update is called once per frame
+
     void Update()
     {
 
+    }
+
+    private void FixedUpdate()
+    {
+        if(Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
+        {
+            Debug.Log("PERSON TURN");
+        }
     }
 
 

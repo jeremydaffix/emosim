@@ -12,6 +12,13 @@ public class MentalImage
     InteractiveObject objectRemembered;
     Person personRemembered;
     Need needRemembered;
+
+    public MentalImage(int type, InteractiveObject objectRemembered)
+    {
+        this.type = type;
+        this.objectRemembered = objectRemembered;
+    }
+
     // ... ?
 
     public InteractiveObject ObjectRemembered

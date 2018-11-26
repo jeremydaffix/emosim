@@ -6,8 +6,18 @@ using System.Collections.Generic;
 // which can then be translated to emotions
 // it can also satisfy some needs
 public class InteractiveObject : MonoBehaviour
+
 {
+    // + tard : faire une factory !!!
+
+    public const int TYPE_FOOD = 0;
+    public const int TYPE_ANIMAL = 1;
+    public const int TYPE_MUSHROOM = 2;
+    public const int TYPE_OBSTACLE = 3;
+
+
     string objectName;
+    int type;
 
     List<Perception> triggerBySight = new List<Perception>();
     List<Perception> triggerBySmell = new List<Perception>();
@@ -19,11 +29,21 @@ public class InteractiveObject : MonoBehaviour
     float detectableFrom = 5.0f;
 
 
-    public InteractiveObject(string n)
+    public InteractiveObject(string n, int t)
     {
-        this.ObjectName = n;
+        ObjectName = n;
+        Type = t;
     }
 
+
+
+    private void FixedUpdate()
+    {
+        if (Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
+        {
+            Debug.Log("OBJECT " + objectName + " TURN");
+        }
+    }
 
 
 
@@ -102,6 +122,19 @@ public class InteractiveObject : MonoBehaviour
         set
         {
             needsSatisfied = value;
+        }
+    }
+
+    public int Type
+    {
+        get
+        {
+            return type;
+        }
+
+        set
+        {
+            type = value;
         }
     }
 }
