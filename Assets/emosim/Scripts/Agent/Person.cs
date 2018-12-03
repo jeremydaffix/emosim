@@ -8,6 +8,7 @@ public class Person : MonoBehaviour
 
     Mind mind;
 
+
     // for perceptions from own body
     Organ heart;
     Organ stomach;

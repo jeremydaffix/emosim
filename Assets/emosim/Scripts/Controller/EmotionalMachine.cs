@@ -10,25 +10,25 @@ public class EmotionalMachine
     List<SomaticMarker> somaticMemory = new List<SomaticMarker>();
 
 
-    Perception  fastHeartBeat, slowHeartBeat, normalHeartBeat, // heart
-                stomachNormal, wantToVomit, stomachAche, // stomach
-                noHormones, painHormones, pleasureHormones, stressHormones, relaxationHormones,  // brain
-                smilingFace, pokerFace, sadFace, frightenedFace, // face
-                closedFists, relaxedPosture, closedPosture, frightenedPosture, happyPosture, // posture
-                normalEyes, inTears, // eyes
-                looksNormal, looksGood, looksBad, looksTerrifying, // eyesSensor
-                smellsNormal, smellsGood, smellsBad, // noseSensor
-                tastesNormal, tastesGood, tastesBad; // palateSensor
+    /*Perception fastHeartBeat, slowHeartBeat, normalHeartBeat, // heart
+               stomachNormal, wantToVomit, stomachAche, // stomach
+               noHormones, painHormones, pleasureHormones, stressHormones, relaxationHormones,  // brain
+               smilingFace, pokerFace, sadFace, frightenedFace, // face
+               closedFists, relaxedPosture, closedPosture, frightenedPosture, happyPosture, // posture
+               normalEyes, inTears, // eyes
+               looksNormal, looksGood, looksBad, looksTerrifying, // eyesSensor
+               smellsNormal, smellsGood, smellsBad, // noseSensor
+               tastesNormal, tastesGood, tastesBad; // palateSensor*/
+
+
+    Dictionary<string, Perception> perceptions = new Dictionary<string, Perception>();
 
 
     Emotion fear, pleasure, pain, sadness, stress, relaxation, sickness, neutral;//anger, pride, shame;
 
-    Need health, satiety;
+    //Need health, satiety;
+    Dictionary<string, Need> needs = new Dictionary<string, Need>();
 
-    InteractiveObject  apple, carrot, endive, // food
-                       chanterelle, amanita, // champipis
-                       snake, spider, pig, chicken, // animals
-                       tree, brambles; // obstacles
 
 
 
@@ -43,158 +43,91 @@ public class EmotionalMachine
 
         // perceptions
 
-        normalHeartBeat = new Perception(person.Heart, 0);
-        fastHeartBeat = new Perception(person.Heart, 1);
-        slowHeartBeat = new Perception(person.Heart, 2);
+        perceptions["normalHeartBeat"] = new Perception(person.Heart, 0);
+        perceptions["fastHeartBeat"] = new Perception(person.Heart, 1);
+        perceptions["slowHeartBeat"] = new Perception(person.Heart, 2);
 
-        stomachNormal = new Perception(person.Stomach, 0);
-        stomachAche = new Perception(person.Stomach, 1);
-        wantToVomit = new Perception(person.Stomach, 2);
+        perceptions["stomachNormal"] = new Perception(person.Stomach, 0);
+        perceptions["stomachAche"] = new Perception(person.Stomach, 1);
+        perceptions["wantToVomit"] = new Perception(person.Stomach, 2);
 
-        noHormones = new Perception(person.Brain, 0);
-        painHormones = new Perception(person.Brain, 1);
-        pleasureHormones = new Perception(person.Brain, 2);
-        stressHormones = new Perception(person.Brain, 3);
-        relaxationHormones = new Perception(person.Brain, 4);
+        perceptions["noHormones"] = new Perception(person.Brain, 0);
+        perceptions["painHormones"] = new Perception(person.Brain, 1);
+        perceptions["pleasureHormones"] = new Perception(person.Brain, 2);
+        perceptions["stressHormones"] = new Perception(person.Brain, 3);
+        perceptions["relaxationHormones"] = new Perception(person.Brain, 4);
 
-        pokerFace = new Perception(person.Face, 0);
-        smilingFace = new Perception(person.Face, 1);
-        sadFace = new Perception(person.Face, 2);
-        frightenedFace = new Perception(person.Face, 3);
+        perceptions["pokerFace"] = new Perception(person.Face, 0);
+        perceptions["smilingFace"] = new Perception(person.Face, 1);
+        perceptions["sadFace"] = new Perception(person.Face, 2);
+        perceptions["frightenedFace"] = new Perception(person.Face, 3);
 
-        relaxedPosture = new Perception(person.Posture, 0);
-        closedFists = new Perception(person.Posture, 1);
-        closedPosture = new Perception(person.Posture, 2);
-        frightenedPosture = new Perception(person.Posture, 3);
-        happyPosture = new Perception(person.Posture, 4);
-
-
-        normalEyes = new Perception(person.Eyes, 0);
-        inTears = new Perception(person.Eyes, 1);
+        perceptions["relaxedPosture"] = new Perception(person.Posture, 0);
+        perceptions["closedFists"] = new Perception(person.Posture, 1);
+        perceptions["closedPosture"] = new Perception(person.Posture, 2);
+        perceptions["frightenedPosture"] = new Perception(person.Posture, 3);
+        perceptions["happyPosture"] = new Perception(person.Posture, 4);
 
 
-        looksNormal = new Perception(person.EyesSensor, 0);
-        looksGood = new Perception(person.EyesSensor, 1);
-        looksBad = new Perception(person.EyesSensor, 2);
-        looksTerrifying = new Perception(person.EyesSensor, 3);
-
-        smellsNormal = new Perception(person.NoseSensor, 0);
-        smellsGood = new Perception(person.NoseSensor, 1);
-        smellsBad = new Perception(person.NoseSensor, 2);
-
-        tastesNormal = new Perception(person.PalateSensor, 0);
-        tastesGood = new Perception(person.PalateSensor, 1);
-        tastesBad = new Perception(person.PalateSensor, 2);
+        perceptions["normalEyes"] = new Perception(person.Eyes, 0);
+        perceptions["inTears"] = new Perception(person.Eyes, 1);
 
 
+        perceptions["looksNormal"] = new Perception(person.EyesSensor, 0);
+        perceptions["looksGood"] = new Perception(person.EyesSensor, 1);
+        perceptions["looksBad"] = new Perception(person.EyesSensor, 2);
+        perceptions["looksTerrifying"] = new Perception(person.EyesSensor, 3);
 
-        //fastHeartBeat = new Perception();
+        perceptions["smellsNormal"] = new Perception(person.NoseSensor, 0);
+        perceptions["smellsGood"] = new Perception(person.NoseSensor, 1);
+        perceptions["smellsBad"] = new Perception(person.NoseSensor, 2);
+
+        perceptions["tastesNormal"] = new Perception(person.PalateSensor, 0);
+        perceptions["tastesGood"] = new Perception(person.PalateSensor, 1);
+        perceptions["tastesBad"] = new Perception(person.PalateSensor, 2);
+
 
 
         // emotions
 
         fear = new Emotion("fear", -2);
-        fear.AddPerception(fastHeartBeat).AddPerception(stomachAche).AddPerception(normalEyes).AddPerception(stressHormones).AddPerception(frightenedFace).AddPerception(frightenedPosture).AddPerception(looksTerrifying);
+        fear.AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["stressHormones"]).AddPerception(perceptions["frightenedFace"]).AddPerception(perceptions["frightenedPosture"]).AddPerception(perceptions["looksTerrifying"]);
 
         pleasure = new Emotion("pleasure", 2);
-        pleasure.AddPerception(fastHeartBeat).AddPerception(stomachNormal).AddPerception(normalEyes).AddPerception(pleasureHormones).AddPerception(smilingFace).AddPerception(happyPosture).AddPerception(looksGood).AddPerception(tastesGood).AddPerception(smellsGood);
+        pleasure.AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["pleasureHormones"]).AddPerception(perceptions["smilingFace"]).AddPerception(perceptions["happyPosture"]).AddPerception(perceptions["looksGood"]).AddPerception(perceptions["tastesGood"]).AddPerception(perceptions["smellsGood"]);
 
         pain = new Emotion("pain", -1);
-        pain.AddPerception(fastHeartBeat).AddPerception(stomachNormal).AddPerception(inTears).AddPerception(painHormones).AddPerception(sadFace).AddPerception(closedFists);
-        
+        pain.AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["inTears"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedFists"]);
+
         sadness = new Emotion("sadness", -1);
-        sadness.AddPerception(slowHeartBeat).AddPerception(stomachAche).AddPerception(inTears).AddPerception(painHormones).AddPerception(sadFace).AddPerception(closedPosture).AddPerception(smellsBad).AddPerception(looksBad).AddPerception(tastesBad);
+        sadness.AddPerception(perceptions["slowHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["inTears"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]).AddPerception(perceptions["smellsBad"]).AddPerception(perceptions["looksBad"]).AddPerception(perceptions["tastesBad"]);
 
         stress = new Emotion("stress", -1);
-        sadness.AddPerception(fastHeartBeat).AddPerception(stomachAche).AddPerception(normalEyes).AddPerception(stressHormones).AddPerception(sadFace).AddPerception(closedPosture);
+        sadness.AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["stressHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]);
 
         relaxation = new Emotion("relaxation", 1);
-        sadness.AddPerception(slowHeartBeat).AddPerception(stomachNormal).AddPerception(normalEyes).AddPerception(relaxationHormones).AddPerception(smilingFace).AddPerception(relaxedPosture);
+        sadness.AddPerception(perceptions["slowHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["relaxationHormones"]).AddPerception(perceptions["smilingFace"]).AddPerception(perceptions["relaxedPosture"]);
 
         sickness = new Emotion("sickness", -2);
-        sickness.AddPerception(normalHeartBeat).AddPerception(wantToVomit).AddPerception(normalEyes).AddPerception(painHormones).AddPerception(sadFace).AddPerception(closedPosture);
+        sickness.AddPerception(perceptions["normalHeartBeat"]).AddPerception(perceptions["wantToVomit"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]);
 
         neutral = new Emotion("neutral", 1);
-        neutral.AddPerception(normalHeartBeat).AddPerception(stomachNormal).AddPerception(normalEyes).AddPerception(noHormones).AddPerception(pokerFace).AddPerception(relaxedPosture);
+        neutral.AddPerception(perceptions["normalHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["noHormones"]).AddPerception(perceptions["pokerFace"]).AddPerception(perceptions["relaxedPosture"]);
 
 
 
         // besoins
 
-        health = new Need("health", 10);
-        satiety = new Need("satiety", 5);
+        needs["health"] = new Need("health", 10);
+        needs["satiety"] = new Need("satiety", 5);
 
 
-        // objets interactifs
-
-        /*InteractiveObject apple, carrot, endive, // food
-                   chanterelle, amanita, // champipis
-                   snake, spider, pig, chicken, // animals
-                   tree, brambles; // obstacles*/
-
-        apple = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD);
-        apple.NeedsSatisfied.Add(satiety, 1);
-        apple.NeedsSatisfied.Add(health, 1);
-
-        apple.TriggerBySight.Add(looksGood);
-        apple.TriggerBySmell.Add(smellsGood);
-        apple.TriggerByTaste.Add(tastesGood);
-
-        apple.TriggerByTaste.Add(pleasureHormones);
-        apple.TriggerByTaste.Add(smilingFace);
-        apple.TriggerByTaste.Add(happyPosture);
-
-
-        carrot = new InteractiveObject("carrot", InteractiveObject.TYPE_FOOD);
-        carrot.NeedsSatisfied.Add(satiety, 1);
-        carrot.NeedsSatisfied.Add(health, 2);
-
-        carrot.TriggerBySight.Add(looksBad);
-        carrot.TriggerBySmell.Add(smellsNormal);
-        carrot.TriggerByTaste.Add(tastesNormal);
-
-
-        endive = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD);
-        endive.NeedsSatisfied.Add(satiety, 2);
-        endive.NeedsSatisfied.Add(health, 3);
-
-        endive.TriggerBySight.Add(looksNormal);
-        endive.TriggerBySmell.Add(smellsBad);
-        endive.TriggerByTaste.Add(tastesBad);
-
-        endive.TriggerByTaste.Add(sadFace);
-        endive.TriggerByTaste.Add(closedPosture);
-
-
-        chanterelle = new InteractiveObject("chanterelle", InteractiveObject.TYPE_MUSHROOM);
-        chanterelle.NeedsSatisfied.Add(satiety, 1);
-        chanterelle.NeedsSatisfied.Add(health, 0);
-
-        chanterelle.TriggerBySight.Add(looksNormal);
-        chanterelle.TriggerBySmell.Add(smellsNormal);
-        chanterelle.TriggerByTaste.Add(tastesGood);
-
-
-        amanita = new InteractiveObject("amanita", InteractiveObject.TYPE_MUSHROOM);
-        amanita.NeedsSatisfied.Add(satiety, 1);
-        amanita.NeedsSatisfied.Add(health, -4);
-
-        amanita.TriggerBySight.Add(looksGood);
-        amanita.TriggerBySmell.Add(smellsNormal);
-        amanita.TriggerByTaste.Add(tastesNormal);
-
-        amanita.TriggerByTaste.Add(wantToVomit);
-        amanita.TriggerByTaste.Add(painHormones);
-        amanita.TriggerByTaste.Add(sadFace);
-        amanita.TriggerByTaste.Add(closedPosture);
-
-        
 
         // marqueurs somatiques innés
 
-        SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, amanita));
-        amanitaSM.Perceptions.Add(wantToVomit);
-        amanitaSM.Perceptions.Add(painHormones);
+        SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, Environment.Instance.InteractiveObjects["amanita"]));
+        amanitaSM.Perceptions.Add(perceptions["wantToVomit"]);
+        amanitaSM.Perceptions.Add(perceptions["painHormones"]);
         SomaticMemory.Add(amanitaSM);
 
 
@@ -203,6 +136,74 @@ public class EmotionalMachine
         // (dans mind ???)
 
     }
+
+
+    public int CalcEmotional()
+    {
+        return 0;
+    }
+
+    public List<Emotion> CalcCurrentEmotions()
+    {
+        List <Emotion> em = new List<Emotion>();
+
+        return em;
+    }
+
+
+    public void SeeObject(InteractiveObject obj)
+    {
+        foreach(string s in obj.TriggerBySight)
+        {
+            if(perceptions.ContainsKey(s))
+            {
+                Perception p = perceptions[s];
+
+                p.Organ.State = p.State;
+            }
+        }
+    }
+
+
+    public void SmellObject(InteractiveObject obj)
+    {
+        foreach (string s in obj.TriggerBySmell)
+        {
+            if (perceptions.ContainsKey(s))
+            {
+                Perception p = perceptions[s];
+
+                p.Organ.State = p.State;
+            }
+        }
+    }
+
+
+    public void EatObject(InteractiveObject obj)
+    {
+        foreach (string s in obj.TriggerByTaste)
+        {
+            if (perceptions.ContainsKey(s))
+            {
+                Perception p = perceptions[s];
+
+                p.Organ.State = p.State;
+            }
+        }
+
+        foreach (KeyValuePair<string, int> kvp in obj.NeedsSatisfied)
+        {
+            if (needs.ContainsKey(kvp.Key))
+            {
+                Need n = needs[kvp.Key];
+
+                n.CurrentScore += kvp.Value;
+            }
+        }
+    }
+
+
+
 
     public List<SomaticMarker> SomaticMemory
     {

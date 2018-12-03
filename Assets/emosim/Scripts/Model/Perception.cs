@@ -4,11 +4,13 @@ public class Perception
 {
     Organ organ;
     int state;
+    int strength;
 
-    public Perception(Organ organ, int state)
+    public Perception(Organ organ, int state, int st = 1)
     {
         this.organ = organ;
         this.state = state;
+        this.strength = st;
     }
 
     public Organ Organ
@@ -34,6 +36,19 @@ public class Perception
         set
         {
             state = value;
+        }
+    }
+
+    public int Strength
+    {
+        get
+        {
+            return strength;
+        }
+
+        set
+        {
+            strength = value;
         }
     }
 }

@@ -10,13 +10,20 @@ public class Simulation : MonoBehaviour
     public int TurnCpt = 0;
 
 
+
+
+
+
     // Use this for initialization
     void Start()
     {
         Instance = this;
 
 
+        
 
+
+       
     }
 
     // Update is called once per frame

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // an interactive object triggers some perceptions
 // which can then be translated to emotions
 // it can also satisfy some needs
-public class InteractiveObject : MonoBehaviour
+public class InteractiveObject
 
 {
     // + tard : faire une factory !!!
@@ -19,11 +19,17 @@ public class InteractiveObject : MonoBehaviour
     string objectName;
     int type;
 
-    List<Perception> triggerBySight = new List<Perception>();
+    /*List<Perception> triggerBySight = new List<Perception>();
     List<Perception> triggerBySmell = new List<Perception>();
-    List<Perception> triggerByTaste = new List<Perception>();
+    List<Perception> triggerByTaste = new List<Perception>();*/
 
-    Dictionary<Need, int> needsSatisfied = new Dictionary<Need, int>();
+    List<string> triggerBySight = new List<string>();
+    List<string> triggerBySmell = new List<string>();
+    List<string> triggerByTaste = new List<string>();
+
+    //Dictionary<Need, int> needsSatisfied = new Dictionary<Need, int>();
+
+    Dictionary<string, int> needsSatisfied = new Dictionary<string, int>();
 
 
     float detectableFrom = 5.0f;
@@ -36,14 +42,6 @@ public class InteractiveObject : MonoBehaviour
     }
 
 
-
-    private void FixedUpdate()
-    {
-        if (Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
-        {
-            Debug.Log("OBJECT " + objectName + " TURN");
-        }
-    }
 
 
 
@@ -72,8 +70,22 @@ public class InteractiveObject : MonoBehaviour
             detectableFrom = value;
         }
     }
+    
 
-    public List<Perception> TriggerBySight
+    public int Type
+    {
+        get
+        {
+            return type;
+        }
+
+        set
+        {
+            type = value;
+        }
+    }
+
+    public List<string> TriggerBySight
     {
         get
         {
@@ -86,7 +98,7 @@ public class InteractiveObject : MonoBehaviour
         }
     }
 
-    public List<Perception> TriggerBySmell
+    public List<string> TriggerBySmell
     {
         get
         {
@@ -99,7 +111,7 @@ public class InteractiveObject : MonoBehaviour
         }
     }
 
-    public List<Perception> TriggerByTaste
+    public List<string> TriggerByTaste
     {
         get
         {
@@ -112,7 +124,7 @@ public class InteractiveObject : MonoBehaviour
         }
     }
 
-    public Dictionary<Need, int> NeedsSatisfied
+    public Dictionary<string, int> NeedsSatisfied
     {
         get
         {
@@ -122,19 +134,6 @@ public class InteractiveObject : MonoBehaviour
         set
         {
             needsSatisfied = value;
-        }
-    }
-
-    public int Type
-    {
-        get
-        {
-            return type;
-        }
-
-        set
-        {
-            type = value;
         }
     }
 }
