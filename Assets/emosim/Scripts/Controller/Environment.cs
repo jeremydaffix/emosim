@@ -19,7 +19,7 @@ public class Environment
 
     private Environment()
     {
-        // objets interactifs
+        // model of interactive objects
 
         InteractiveObjects["apple"] = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD);
         InteractiveObjects["apple"].NeedsSatisfied.Add("satiety", 1);
@@ -76,6 +76,18 @@ public class Environment
         InteractiveObjects["amanita"].TriggerByTaste.Add("painHormones");
         InteractiveObjects["amanita"].TriggerByTaste.Add("sadFace");
         InteractiveObjects["amanita"].TriggerByTaste.Add("closedPosture");
+
+
+        // interactive objects
+
+
+        
+
+
+        // persons
+
+
+
     }
 
 
