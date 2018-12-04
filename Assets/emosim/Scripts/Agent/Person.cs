@@ -17,7 +17,7 @@ public class Person : MonoBehaviour
     Organ posture;
     Organ eyes;
 
-    // for perceptions from other people / objects
+    // for physical perceptions from other people / objects (looks nice / ugly, smells good / bad, etc)
     Organ eyesSensor;
     Organ noseSensor;
     Organ palateSensor;
@@ -25,14 +25,13 @@ public class Person : MonoBehaviour
     EmotionalMachine emotionalMachine;
 
 
-    float detectableFrom = 5.0f;
-
-
+    public float LookRange = 3f;
 
 
     void Start()
     {
         EmotionalMachine = new EmotionalMachine(this);
+        Mind = new Mind(this);
     }
 
 
@@ -45,28 +44,43 @@ public class Person : MonoBehaviour
     {
         if(Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
         {
-            Debug.Log("PERSON TURN");
+            //Debug.Log("PERSON TURN");
+
+            mind.TakeDecision();
         }
     }
 
 
-
-    // TODO detect with more senses (sight, smell,...)
-    public List<InteractiveObject> CheckForInteractiveObjects(float dist)
+    // return all objects and persos we can see
+    // TODO detect with more senses (smell,...)
+    public List<GameObject> LookForThings()
     {
-        List<InteractiveObject> objList = new List<InteractiveObject>();
+        List<GameObject> l = new List<GameObject>();
+
+        foreach (Person p in Environment.Instance.Persons)
+        {
+            float dist = Vector3.Distance(p.transform.position, transform.position);
+
+            if (dist <= LookRange) l.Add(p.gameObject);
+        }
 
 
+        foreach (InteractiveObjectInstance i in Environment.Instance.InteractiveObjectInstances)
+        {
+            float dist = Vector3.Distance(i.transform.position, transform.position);
 
-        return objList;
+            if (dist <= LookRange) l.Add(i.gameObject);
+        }
+
+
+        return l;
     }
 
+    
 
+    
 
-
-
-
-
+    
 
 
     public Mind Mind
@@ -212,16 +226,4 @@ public class Person : MonoBehaviour
         }
     }
 
-    public float DetectableFrom
-    {
-        get
-        {
-            return detectableFrom;
-        }
-
-        set
-        {
-            detectableFrom = value;
-        }
-    }
 }

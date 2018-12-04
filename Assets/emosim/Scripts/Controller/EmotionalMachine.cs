@@ -10,28 +10,11 @@ public class EmotionalMachine
 
     List<SomaticMarker> somaticMemory = new List<SomaticMarker>();
 
-
-    /*Perception fastHeartBeat, slowHeartBeat, normalHeartBeat, // heart
-               stomachNormal, wantToVomit, stomachAche, // stomach
-               noHormones, painHormones, pleasureHormones, stressHormones, relaxationHormones,  // brain
-               smilingFace, pokerFace, sadFace, frightenedFace, // face
-               closedFists, relaxedPosture, closedPosture, frightenedPosture, happyPosture, // posture
-               normalEyes, inTears, // eyes
-               looksNormal, looksGood, looksBad, looksTerrifying, // eyesSensor
-               smellsNormal, smellsGood, smellsBad, // noseSensor
-               tastesNormal, tastesGood, tastesBad; // palateSensor*/
-
-
     Dictionary<string, Perception> perceptions = new Dictionary<string, Perception>();
-
-
-    //Emotion fear, pleasure, pain, sadness, stress, relaxation, sickness, neutral;//anger, pride, shame;
-
+    
     Dictionary<string, Emotion> emotions = new Dictionary<string, Emotion>();
 
-    //Need health, satiety;
     Dictionary<string, Need> needs = new Dictionary<string, Need>();
-
 
 
 

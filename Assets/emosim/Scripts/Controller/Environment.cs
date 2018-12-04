@@ -2,26 +2,51 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Environment
+public class Environment : MonoBehaviour
 {
     static Environment instance = null; // singleton
 
 
     private Dictionary<string, InteractiveObject> interactiveObjects = new Dictionary<string, InteractiveObject>();
 
-    /*apple, carrot, endive, // food
-                   chanterelle, amanita, // champipis
-                   snake, spider, pig, chicken, // animals
-                   tree, brambles; // obstacles
-                   */
+    public GameObject personPrefab, interactiveObjectPrefab;
+
+    List<Person> persons = new List<Person>();
+    List<InteractiveObjectInstance> interactiveObjectInstances = new List<InteractiveObjectInstance>();
 
 
+    Sprite[] fruitsAtlas, foodAtlas;
 
-    private Environment()
+    
+
+    public void Start()
     {
+        instance = this;
+
+
+        LoadResources();
+        LoadInteractiveObjectModels();
+
+        CreateEnvironment();
+
+
+    }
+
+
+    void LoadResources()
+    {
+        // resources
+
+        fruitsAtlas = Resources.LoadAll<Sprite>("Sprites/fruits");
+        foodAtlas = Resources.LoadAll<Sprite>("Sprites/food");
+    }
+
+    public void LoadInteractiveObjectModels()
+    {
+
         // model of interactive objects
 
-        InteractiveObjects["apple"] = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD);
+        InteractiveObjects["apple"] = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD, fruitsAtlas[0]);
         InteractiveObjects["apple"].NeedsSatisfied.Add("satiety", 1);
         InteractiveObjects["apple"].NeedsSatisfied.Add("health", 1);
 
@@ -34,7 +59,7 @@ public class Environment
         InteractiveObjects["apple"].TriggerByTaste.Add("happyPosture");
 
 
-        InteractiveObjects["carrot"] = new InteractiveObject("carrot", InteractiveObject.TYPE_FOOD);
+        InteractiveObjects["carrot"] = new InteractiveObject("carrot", InteractiveObject.TYPE_FOOD, foodAtlas[3]);
         InteractiveObjects["carrot"].NeedsSatisfied.Add("satiety", 1);
         InteractiveObjects["carrot"].NeedsSatisfied.Add("health", 2);
 
@@ -43,7 +68,7 @@ public class Environment
         InteractiveObjects["carrot"].TriggerByTaste.Add("tastesNormal");
 
 
-        InteractiveObjects["endive"] = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD);
+        InteractiveObjects["endive"] = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD, fruitsAtlas[8]);
         InteractiveObjects["endive"].NeedsSatisfied.Add("satiety", 2);
         InteractiveObjects["endive"].NeedsSatisfied.Add("health", 3);
 
@@ -76,20 +101,50 @@ public class Environment
         InteractiveObjects["amanita"].TriggerByTaste.Add("painHormones");
         InteractiveObjects["amanita"].TriggerByTaste.Add("sadFace");
         InteractiveObjects["amanita"].TriggerByTaste.Add("closedPosture");
+    }
 
 
+
+    public void CreateEnvironment()
+    {
+        
         // interactive objects
 
-
-        
+        CreateInteractiveObject("apple");
+        CreateInteractiveObject("carrot", new Vector3(2, 2, 0));
+        CreateInteractiveObject("endive", new Vector3(-3, -4, 0));
 
 
         // persons
 
+        CreatePerson();
+        CreatePerson();
+    }
 
+
+
+
+    public void CreatePerson(Vector3 pos = new Vector3())
+    {
+        GameObject obj = Instantiate(personPrefab, new Vector3(), new Quaternion());
+        Person p = obj.GetComponent<Person>();
+
+        persons.Add(p);
 
     }
 
+    public void CreateInteractiveObject(string name, Vector3 pos = new Vector3())
+    {
+        GameObject obj = Instantiate(interactiveObjectPrefab, pos, new Quaternion());
+        InteractiveObjectInstance i = obj.GetComponent<InteractiveObjectInstance>();
+
+        i.InteractiveObjectName = name;
+        i.InteractiveObject = InteractiveObjects[name];
+
+        i.GetComponent<SpriteRenderer>().sprite = i.InteractiveObject.Sprite;
+
+        interactiveObjectInstances.Add(i);
+    }
 
 
 
@@ -97,7 +152,11 @@ public class Environment
     {
         get
         {
-            if (instance == null) instance = new Environment();
+            /*if (instance == null)
+            {
+
+                instance = new Environment();
+            }*/
 
             return instance;
         }
@@ -114,6 +173,32 @@ public class Environment
         set
         {
             interactiveObjects = value;
+        }
+    }
+
+    public List<Person> Persons
+    {
+        get
+        {
+            return persons;
+        }
+
+        set
+        {
+            persons = value;
+        }
+    }
+
+    public List<InteractiveObjectInstance> InteractiveObjectInstances
+    {
+        get
+        {
+            return interactiveObjectInstances;
+        }
+
+        set
+        {
+            interactiveObjectInstances = value;
         }
     }
 }

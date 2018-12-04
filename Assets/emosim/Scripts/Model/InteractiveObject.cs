@@ -15,6 +15,8 @@ public class InteractiveObject
     public const int TYPE_MUSHROOM = 2;
     public const int TYPE_OBSTACLE = 3;
 
+    Sprite sprite;
+
 
     string objectName;
     int type;
@@ -35,10 +37,11 @@ public class InteractiveObject
     float detectableFrom = 5.0f;
 
 
-    public InteractiveObject(string n, int t)
+    public InteractiveObject(string n, int t, Sprite spr = null)
     {
         ObjectName = n;
         Type = t;
+        Sprite = spr;
     }
 
 
@@ -134,6 +137,19 @@ public class InteractiveObject
         set
         {
             needsSatisfied = value;
+        }
+    }
+
+    public Sprite Sprite
+    {
+        get
+        {
+            return sprite;
+        }
+
+        set
+        {
+            sprite = value;
         }
     }
 }
