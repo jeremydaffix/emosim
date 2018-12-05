@@ -11,6 +11,9 @@ public class Environment : MonoBehaviour
 
     public GameObject personPrefab, interactiveObjectPrefab;
 
+    public int borderX = 9;
+    public int borderY = 4;
+
     List<Person> persons = new List<Person>();
     List<InteractiveObjectInstance> interactiveObjectInstances = new List<InteractiveObjectInstance>();
 
@@ -110,9 +113,21 @@ public class Environment : MonoBehaviour
         
         // interactive objects
 
-        CreateInteractiveObject("apple");
-        CreateInteractiveObject("carrot", new Vector3(2, 2, 0));
-        CreateInteractiveObject("endive", new Vector3(-3, -4, 0));
+        CreateRandomInteractiveObject("apple");
+        CreateRandomInteractiveObject("carrot");
+        CreateRandomInteractiveObject("endive");
+
+        CreateRandomInteractiveObject("apple");
+        CreateRandomInteractiveObject("carrot");
+        CreateRandomInteractiveObject("endive");
+
+        CreateRandomInteractiveObject("apple");
+        CreateRandomInteractiveObject("carrot");
+        CreateRandomInteractiveObject("endive");
+
+        CreateRandomInteractiveObject("apple");
+        CreateRandomInteractiveObject("carrot");
+        CreateRandomInteractiveObject("endive");
 
 
         // persons
@@ -144,6 +159,24 @@ public class Environment : MonoBehaviour
         i.GetComponent<SpriteRenderer>().sprite = i.InteractiveObject.Sprite;
 
         interactiveObjectInstances.Add(i);
+    }
+
+
+    public void CreateRandomInteractiveObject(string name)
+    {
+        int x = Random.Range(-borderX, borderX);
+        int y = Random.Range(-borderY, borderY);
+
+        CreateInteractiveObject(name, new Vector3(x, y, 0));
+    }
+
+
+    public void RecycleInteractiveObject(InteractiveObjectInstance ioi)
+    {
+        int x = Random.Range(-borderX, borderX);
+        int y = Random.Range(-borderY, borderY);
+
+        ioi.transform.position = new Vector3(x, y, 0);
     }
 
 

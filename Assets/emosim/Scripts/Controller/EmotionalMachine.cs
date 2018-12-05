@@ -18,7 +18,7 @@ public class EmotionalMachine
 
 
 
-    public EmotionalMachine(Person p)
+    public void Create(Person p)
     {
         person = p;
 
@@ -97,7 +97,7 @@ public class EmotionalMachine
         emotions["sickness"] = new Emotion("sickness", -2);
         emotions["sickness"].AddPerception(perceptions["normalHeartBeat"]).AddPerception(perceptions["wantToVomit"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]);
 
-        emotions["neutral"] = new Emotion("neutral", 1);
+        emotions["neutral"] = new Emotion("neutral", 0);
         emotions["neutral"].AddPerception(perceptions["normalHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["noHormones"]).AddPerception(perceptions["pokerFace"]).AddPerception(perceptions["relaxedPosture"]);
 
 
@@ -132,8 +132,12 @@ public class EmotionalMachine
 
         foreach(KeyValuePair<Emotion, int> kvp in em)
         {
-            Debug.Log(kvp.Key.Name + " : " + kvp.Value);
-            score += kvp.Key.DesirabilityScore;
+            if (kvp.Value >= (em.Values.Max() / 3f))
+            {
+                Debug.Log(kvp.Key.Name + " : " + kvp.Value);
+
+                score += (kvp.Key.DesirabilityScore * kvp.Value);
+            }
 
             // ...
         }
@@ -164,7 +168,9 @@ public class EmotionalMachine
             em[e] = score;
         }
 
-        em.OrderByDescending(i => i.Key);
+        //em.OrderByDescending(i => i.Key);
+
+        em = em.OrderByDescending(u => u.Value).ToDictionary(z => z.Key, y => y.Value);
 
         return em;
     }
@@ -177,7 +183,7 @@ public class EmotionalMachine
             if(perceptions.ContainsKey(s))
             {
                 Perception p = perceptions[s];
-
+                
                 p.Organ.State = p.State;
             }
         }
@@ -198,7 +204,7 @@ public class EmotionalMachine
     }
 
 
-    public void EatObject(InteractiveObject obj)
+    public void TasteObject(InteractiveObject obj)
     {
         foreach (string s in obj.TriggerByTaste)
         {
@@ -241,6 +247,20 @@ public class EmotionalMachine
     }
 
 
+
+    public void TestObject(InteractiveObject obj)
+    {
+        person.EmotionalMachine.ResetPerceptions();
+        person.EmotionalMachine.SeeObject(obj);
+        person.EmotionalMachine.SmellObject(obj);
+        person.EmotionalMachine.RememberObject(obj);
+
+        //person.EmotionalMachine.EatObject(obj);
+
+        //person.EmotionalMachine.CalcMood();
+    }
+
+
     public void ResetPerceptions()
     {
         person.Brain.State = 0;
@@ -252,6 +272,27 @@ public class EmotionalMachine
         person.PalateSensor.State = 0;
         person.Posture.State = 0;
         person.Stomach.State = 0;
+    }
+
+
+
+
+    public void SaveInSomaticMemory(InteractiveObject io)
+    {
+        SomaticMarker sm = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, io), 3);
+
+        sm.Perceptions.Add(new Perception(person.Brain, person.Brain.State));
+        sm.Perceptions.Add(new Perception(person.Stomach, person.Stomach.State));
+        sm.Perceptions.Add(new Perception(person.Eyes, person.Eyes.State));
+        sm.Perceptions.Add(new Perception(person.Heart, person.Heart.State));
+        sm.Perceptions.Add(new Perception(person.Posture, person.Posture.State));
+        sm.Perceptions.Add(new Perception(person.Face, person.Face.State));
+
+        sm.Perceptions.Add(new Perception(person.EyesSensor, person.EyesSensor.State));
+        sm.Perceptions.Add(new Perception(person.NoseSensor, person.NoseSensor.State));
+        sm.Perceptions.Add(new Perception(person.PalateSensor, person.PalateSensor.State));
+
+        SomaticMemory.Add(sm);
     }
 
 

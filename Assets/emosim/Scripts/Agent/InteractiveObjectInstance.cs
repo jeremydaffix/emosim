@@ -44,7 +44,7 @@ public class InteractiveObjectInstance : MonoBehaviour
     {
         if (Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
         {
-            Debug.Log("OBJECT " + interactiveObject.ObjectName + " TURN");
+            //Debug.Log("OBJECT " + interactiveObject.ObjectName + " TURN");
         }
     }
 }

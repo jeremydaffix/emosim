@@ -154,6 +154,8 @@ MonoBehaviour:
     type: 2}
   interactiveObjectPrefab: {fileID: 1453148077552066, guid: 596fdf9047820e843b92fe0137808b90,
     type: 2}
+  borderX: 9
+  borderY: 4
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -218,5 +220,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9e4bc7bfcfd304b8539d347e05ac45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TurnDuration: 30
+  TurnDuration: 15
   TurnCpt: 0

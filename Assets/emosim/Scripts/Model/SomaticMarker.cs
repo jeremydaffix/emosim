@@ -7,9 +7,15 @@ public class SomaticMarker
     MentalImage mentalImage;
     List<Perception> perceptions = new List<Perception>();
 
-    public SomaticMarker(MentalImage mentalImage)
+    // acquis : weight 3
+    // inné : weight 2
+    // imitation : weight 1
+    int weight;
+
+    public SomaticMarker(MentalImage mentalImage, int w = 2)
     {
         this.mentalImage = mentalImage;
+        weight = w;
     }
 
     public MentalImage MentalImage
@@ -35,6 +41,19 @@ public class SomaticMarker
         set
         {
             perceptions = value;
+        }
+    }
+
+    public int Weight
+    {
+        get
+        {
+            return weight;
+        }
+
+        set
+        {
+            weight = value;
         }
     }
 }

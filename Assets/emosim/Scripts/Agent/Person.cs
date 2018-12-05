@@ -25,13 +25,27 @@ public class Person : MonoBehaviour
     EmotionalMachine emotionalMachine;
 
 
-    public float LookRange = 3f;
+    public float LookRange = 4f;
 
 
     void Start()
     {
-        EmotionalMachine = new EmotionalMachine(this);
+        EmotionalMachine = new EmotionalMachine();
         Mind = new Mind(this);
+
+        heart = new Organ("heart");
+        stomach = new Organ("stomach");
+        brain = new Organ("brain");
+        face = new Organ("face");
+        posture = new Organ("posture");
+        eyes = new Organ("eyes");
+
+        eyesSensor = new Organ("eyesSensor");
+        noseSensor = new Organ("noseSensor");
+        palateSensor = new Organ("palateSensor");
+
+
+        emotionalMachine.Create(this);
     }
 
 
