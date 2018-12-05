@@ -20,16 +20,10 @@ public class InteractiveObject
 
     string objectName;
     int type;
-
-    /*List<Perception> triggerBySight = new List<Perception>();
-    List<Perception> triggerBySmell = new List<Perception>();
-    List<Perception> triggerByTaste = new List<Perception>();*/
-
+    
     List<string> triggerBySight = new List<string>();
     List<string> triggerBySmell = new List<string>();
     List<string> triggerByTaste = new List<string>();
-
-    //Dictionary<Need, int> needsSatisfied = new Dictionary<Need, int>();
 
     Dictionary<string, int> needsSatisfied = new Dictionary<string, int>();
 

@@ -22,6 +22,8 @@ public class Mind
 
     public void TakeDecision()
     {
+        //Random.seed = System.Environment.TickCount;
+
         List <GameObject> canSee = person.LookForThings();
 
 
@@ -42,16 +44,25 @@ public class Mind
 
             if (ioi != null) // we see an object
             {
-                Debug.Log("** SEE " + ioi.InteractiveObjectName);
-                person.EmotionalMachine.TestObject(ioi.InteractiveObject);
-
-                int score = person.EmotionalMachine.CalcMood();
-
-                if( (score > bestTargetScore) ||
-                    (score == bestTargetScore && Vector3.Distance(person.transform.position, go.transform.position) < Vector3.Distance(person.transform.position, bestTarget.transform.position)))
+                if (ioi.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE)
                 {
-                    bestTarget = go;
-                    bestTargetScore = score;
+
+
+                }
+
+                else
+                {
+                    Debug.Log("** SEE " + ioi.InteractiveObjectName);
+                    person.EmotionalMachine.TestObject(ioi.InteractiveObject);
+
+                    int score = person.EmotionalMachine.CalcMood();
+
+                    if ((score > bestTargetScore) ||
+                        (score == bestTargetScore && Vector3.Distance(person.transform.position, go.transform.position) < Vector3.Distance(person.transform.position, bestTarget.transform.position)))
+                    {
+                        bestTarget = go;
+                        bestTargetScore = score;
+                    }
                 }
             }
 
@@ -184,7 +195,8 @@ public class Mind
         if (person.transform.position.y + walkingDir.y < -Environment.Instance.borderY || person.transform.position.y + walkingDir.y > Environment.Instance.borderY) walkingDir.y = walkingDir.y * -1;
 
 
-        person.transform.position += (walkingDir / 2f);
+        //person.transform.position += (walkingDir / 2f);
+        person.GetComponent<Rigidbody2D>().MovePosition(person.transform.position + (walkingDir / 2f));
 
         cptWalking--;
     }

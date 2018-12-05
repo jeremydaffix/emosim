@@ -19,6 +19,7 @@ public class Environment : MonoBehaviour
 
 
     Sprite[] fruitsAtlas, foodAtlas;
+    Sprite tree;
 
     
 
@@ -42,6 +43,8 @@ public class Environment : MonoBehaviour
 
         fruitsAtlas = Resources.LoadAll<Sprite>("Sprites/fruits");
         foodAtlas = Resources.LoadAll<Sprite>("Sprites/food");
+
+        tree = Resources.Load<Sprite>("Sprites/tree");
     }
 
     public void LoadInteractiveObjectModels()
@@ -104,36 +107,43 @@ public class Environment : MonoBehaviour
         InteractiveObjects["amanita"].TriggerByTaste.Add("painHormones");
         InteractiveObjects["amanita"].TriggerByTaste.Add("sadFace");
         InteractiveObjects["amanita"].TriggerByTaste.Add("closedPosture");
+
+
+
+        InteractiveObjects["tree"] = new InteractiveObject("tree", InteractiveObject.TYPE_OBSTACLE, tree);
+
     }
 
 
 
     public void CreateEnvironment()
     {
-        
-        // interactive objects
-
-        CreateRandomInteractiveObject("apple");
-        CreateRandomInteractiveObject("carrot");
-        CreateRandomInteractiveObject("endive");
-
-        CreateRandomInteractiveObject("apple");
-        CreateRandomInteractiveObject("carrot");
-        CreateRandomInteractiveObject("endive");
-
-        CreateRandomInteractiveObject("apple");
-        CreateRandomInteractiveObject("carrot");
-        CreateRandomInteractiveObject("endive");
-
-        CreateRandomInteractiveObject("apple");
-        CreateRandomInteractiveObject("carrot");
-        CreateRandomInteractiveObject("endive");
-
 
         // persons
 
-        CreatePerson();
-        CreatePerson();
+        for (int i = 0 ; i < Simulation.Instance.NbrPersons ; ++i)
+        {
+            CreatePerson();
+        }
+
+
+        // interactive objects
+
+        for (int i = 0 ; i < Simulation.Instance.NbrObjects ; ++i)
+        {
+            if (i % 3 == 0) CreateRandomInteractiveObject("apple");
+            if (i % 3 == 1) CreateRandomInteractiveObject("carrot");
+            if (i % 3 == 2) CreateRandomInteractiveObject("endive");
+        }
+
+
+        for (int i = 0; i < Simulation.Instance.NbrObstacles; ++i)
+        {
+            CreateRandomInteractiveObject("tree");
+        }
+
+
+
     }
 
 
@@ -158,39 +168,60 @@ public class Environment : MonoBehaviour
 
         i.GetComponent<SpriteRenderer>().sprite = i.InteractiveObject.Sprite;
 
+        if (i.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE) i.GetComponent<BoxCollider2D>().enabled = true;
+
         interactiveObjectInstances.Add(i);
     }
 
 
     public void CreateRandomInteractiveObject(string name)
     {
-        int x = Random.Range(-borderX, borderX);
-        int y = Random.Range(-borderY, borderY);
-
-        CreateInteractiveObject(name, new Vector3(x, y, 0));
+        CreateInteractiveObject(name, RandomCoords());
     }
 
 
     public void RecycleInteractiveObject(InteractiveObjectInstance ioi)
     {
-        int x = Random.Range(-borderX, borderX);
-        int y = Random.Range(-borderY, borderY);
-
-        ioi.transform.position = new Vector3(x, y, 0);
+        ioi.transform.position = RandomCoords();
     }
 
+
+    Vector3 RandomCoords()
+    {
+        int x, y;
+
+        do
+        {
+            x = Random.Range(-borderX, borderX);
+            y = Random.Range(-borderY, borderY);
+
+        } while (!IsPlaceFree(new Vector3(x, y, 0)));
+         
+
+        return new Vector3(x, y, 0);
+    }
+
+    bool IsPlaceFree(Vector3 pos)
+    {
+        bool ret = true;
+
+        foreach(InteractiveObjectInstance ioi in InteractiveObjectInstances)
+        {
+            if(Vector3.Distance(pos, ioi.transform.position) < 1f)
+            {
+                ret = false;
+                break;
+            }
+        }
+
+        return ret;
+    }
 
 
     public static Environment Instance
     {
         get
         {
-            /*if (instance == null)
-            {
-
-                instance = new Environment();
-            }*/
-
             return instance;
         }
 
