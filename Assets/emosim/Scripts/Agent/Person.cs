@@ -4,9 +4,11 @@ using System.Collections.Generic;
 
 public class Person : MonoBehaviour
 {
-    // + tard : faire une factory !!!
+    Mind mind; // decisions center
 
-    Mind mind;
+    EmotionalMachine emotionalMachine; // emotional part of decisions
+    CognitiveMachine cognitiveMachine; // cognitive part of decisions
+
 
 
     // for perceptions from own body
@@ -22,15 +24,20 @@ public class Person : MonoBehaviour
     Organ noseSensor;
     Organ palateSensor;
 
-    EmotionalMachine emotionalMachine;
+
+    PersonActions personActions; // methods to make the agent do something (walk,...)
+
+    GameObject collidingWith = null;
 
 
-    public float LookRange = 4f;
+    public float LookRange = 4f; // how far we can see things
 
 
     void Start()
     {
         EmotionalMachine = new EmotionalMachine();
+        cognitiveMachine = new CognitiveMachine(this);
+
         Mind = new Mind(this);
 
         heart = new Organ("heart");
@@ -46,6 +53,8 @@ public class Person : MonoBehaviour
 
 
         emotionalMachine.Create(this);
+
+        personActions = new PersonActions(this);
     }
 
 
@@ -65,36 +74,32 @@ public class Person : MonoBehaviour
     }
 
 
-    // return all objects and persos we can see
-    // TODO detect with more senses (smell,...)
-    public List<GameObject> LookForThings()
+
+
+
+
+
+
+
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        List<GameObject> l = new List<GameObject>();
+        //Debug.Log("COLLENTER");
 
-        foreach (Person p in Environment.Instance.Persons)
-        {
-            float dist = Vector3.Distance(p.transform.position, transform.position);
-
-            if (dist <= LookRange) l.Add(p.gameObject);
-        }
-
-
-        foreach (InteractiveObjectInstance i in Environment.Instance.InteractiveObjectInstances)
-        {
-            float dist = Vector3.Distance(i.transform.position, transform.position);
-
-            if (dist <= LookRange) l.Add(i.gameObject);
-        }
-
-
-        return l;
+        collidingWith = collision.gameObject;
     }
 
-    
 
-    
+    void OnCollisionExit2D(Collision2D collision)
+    {
 
-    
+        //Debug.Log("COLLEXIT");
+
+        CollidingWith = null;
+    }
+
+
+
 
 
     public Mind Mind
@@ -240,4 +245,29 @@ public class Person : MonoBehaviour
         }
     }
 
+    public PersonActions PersonActions
+    {
+        get
+        {
+            return personActions;
+        }
+
+        set
+        {
+            personActions = value;
+        }
+    }
+
+    public GameObject CollidingWith
+    {
+        get
+        {
+            return collidingWith;
+        }
+
+        set
+        {
+            collidingWith = value;
+        }
+    }
 }

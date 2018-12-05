@@ -222,6 +222,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TurnDuration: 15
   TurnCpt: 0
+  NbrPersons: 2
+  NbrObstacles: 15
+  NbrObjects: 20
 --- !u!1 &908081477
 GameObject:
   m_ObjectHideFlags: 0

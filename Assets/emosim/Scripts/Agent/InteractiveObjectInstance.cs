@@ -26,15 +26,14 @@ public class InteractiveObjectInstance : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        /*if(Environment.Instance.InteractiveObjects.ContainsKey(InteractiveObjectName))
-            interactiveObject = Environment.Instance.InteractiveObjects[InteractiveObjectName];*/
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if (Environment.Instance.InteractiveObjects.ContainsKey(InteractiveObjectName))
-            interactiveObject = Environment.Instance.InteractiveObjects[InteractiveObjectName];*/
+        if (interactiveObject == null && Environment.Instance.InteractiveObjects.ContainsKey(InteractiveObjectName))
+            interactiveObject = Environment.Instance.InteractiveObjects[InteractiveObjectName];
     }
 
 

@@ -7,10 +7,7 @@ public class Mind
     Person person;
 
 
-
-    int cptWalking = 0;
-    Vector3 walkingDir = new Vector3();
-
+    //List<>
 
 
 
@@ -24,7 +21,7 @@ public class Mind
     {
         //Random.seed = System.Environment.TickCount;
 
-        List <GameObject> canSee = person.LookForThings();
+        List <GameObject> canSee = person.PersonActions.LookForThings();
 
 
         GameObject bestTarget = null;
@@ -52,7 +49,7 @@ public class Mind
 
                 else
                 {
-                    Debug.Log("** SEE " + ioi.InteractiveObjectName);
+                    //Debug.Log("** SEE " + ioi.InteractiveObjectName);
                     person.EmotionalMachine.TestObject(ioi.InteractiveObject);
 
                     int score = person.EmotionalMachine.CalcMood();
@@ -77,7 +74,7 @@ public class Mind
         {
             if (Vector3.Distance(person.transform.position, bestTarget.transform.position) <= 1f)
             {
-                ActionEat(bestTarget);
+                person.PersonActions.ActionEat(bestTarget);
 
                 int score = person.EmotionalMachine.CalcMood();
                 string txt;
@@ -119,7 +116,7 @@ public class Mind
 
             else
             {
-                ActionWalkToTarget(bestTarget);
+                person.PersonActions.ActionWalkToTarget(bestTarget);
 
                 lr.positionCount = 2;
                 lr.SetPosition(0, person.transform.position);
@@ -134,7 +131,7 @@ public class Mind
             // default behaviour :
             // random walking
 
-            ActionRandomWalk();
+            person.PersonActions.ActionRandomWalk();
         }
     }
 
@@ -149,72 +146,5 @@ public class Mind
     }
 
 
-
-    // **********
-
-
-    void ActionRandomWalk()
-    {
-        if (cptWalking <= 0)
-        {
-            // random direction
-            int xDir = Random.Range(-1, 2);
-            int yDir = Random.Range(-1, 2);
-
-            walkingDir = new Vector3(xDir, yDir, 0);
-
-            // random time
-            cptWalking = Random.Range(1, 5);
-
-
-            /*Debug.Log("*** WALK ***");
-            Debug.Log(walkingDir);
-            Debug.Log(cptWalking);*/
-        }
-
-
-
-
-        ActionWalk();
-    }
-
-
-    void ActionWalkToTarget(GameObject target)
-    {
-        Debug.Log("GOING TO " + target.GetComponent<InteractiveObjectInstance>().InteractiveObjectName);
-
-        walkingDir = (target.transform.position - person.transform.position).normalized;
-        cptWalking = 1;
-
-        ActionWalk();
-    }
-
-    void ActionWalk()
-    {
-        if (person.transform.position.x + walkingDir.x < -Environment.Instance.borderX || person.transform.position.x + walkingDir.x > Environment.Instance.borderX) walkingDir.x = walkingDir.x * -1;
-        if (person.transform.position.y + walkingDir.y < -Environment.Instance.borderY || person.transform.position.y + walkingDir.y > Environment.Instance.borderY) walkingDir.y = walkingDir.y * -1;
-
-
-        //person.transform.position += (walkingDir / 2f);
-        person.GetComponent<Rigidbody2D>().MovePosition(person.transform.position + (walkingDir / 2f));
-
-        cptWalking--;
-    }
-
-
-    void ActionEat(GameObject target)
-    {
-        InteractiveObjectInstance ioi = target.GetComponent<InteractiveObjectInstance>();
-
-        if(ioi != null)
-        {
-            person.EmotionalMachine.ResetPerceptions();
-            person.EmotionalMachine.TasteObject(ioi.InteractiveObject);
-            person.EmotionalMachine.SaveInSomaticMemory(ioi.InteractiveObject);
-            // needs ?
-
-            Environment.Instance.RecycleInteractiveObject(ioi);
-        }
-        
-    }
+    
 }

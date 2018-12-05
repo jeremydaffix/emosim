@@ -134,7 +134,7 @@ public class EmotionalMachine
         {
             if (kvp.Value >= (em.Values.Max() / 3f))
             {
-                Debug.Log(kvp.Key.Name + " : " + kvp.Value);
+                //Debug.Log(kvp.Key.Name + " : " + kvp.Value);
 
                 score += (kvp.Key.DesirabilityScore * kvp.Value);
             }
@@ -142,7 +142,7 @@ public class EmotionalMachine
             // ...
         }
 
-        Debug.Log("MOOD : " + score);
+        //Debug.Log("MOOD : " + score);
 
         return score;
     }
@@ -167,8 +167,6 @@ public class EmotionalMachine
 
             em[e] = score;
         }
-
-        //em.OrderByDescending(i => i.Key);
 
         em = em.OrderByDescending(u => u.Value).ToDictionary(z => z.Key, y => y.Value);
 
@@ -294,6 +292,18 @@ public class EmotionalMachine
 
         SomaticMemory.Add(sm);
     }
+
+
+
+
+
+    public KeyValuePair<string, int> TakeEmotionalDecision()
+    {
+        KeyValuePair<string, int> kvp = new KeyValuePair<string, int>();
+
+        return kvp;
+    }
+
 
 
     public List<SomaticMarker> SomaticMemory
