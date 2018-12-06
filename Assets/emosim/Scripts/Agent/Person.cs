@@ -30,13 +30,13 @@ public class Person : MonoBehaviour
     GameObject collidingWith = null;
 
 
-    public float LookRange = 4f; // how far we can see things
+    public float LookRange = 3.0f; // how far we can see things
 
 
     void Start()
     {
         EmotionalMachine = new EmotionalMachine();
-        cognitiveMachine = new CognitiveMachine(this);
+        CognitiveMachine = new CognitiveMachine(this);
 
         Mind = new Mind(this);
 
@@ -67,8 +67,6 @@ public class Person : MonoBehaviour
     {
         if(Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
         {
-            //Debug.Log("PERSON TURN");
-
             mind.TakeDecision();
         }
     }
@@ -268,6 +266,19 @@ public class Person : MonoBehaviour
         set
         {
             collidingWith = value;
+        }
+    }
+
+    public CognitiveMachine CognitiveMachine
+    {
+        get
+        {
+            return cognitiveMachine;
+        }
+
+        set
+        {
+            cognitiveMachine = value;
         }
     }
 }

@@ -223,7 +223,7 @@ MonoBehaviour:
   TurnDuration: 15
   TurnCpt: 0
   NbrPersons: 2
-  NbrObstacles: 15
+  NbrObstacles: 10
   NbrObjects: 20
 --- !u!1 &908081477
 GameObject:

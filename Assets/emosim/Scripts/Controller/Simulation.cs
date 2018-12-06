@@ -18,10 +18,11 @@ using System.Collections;
     - pas d'apprentissage des autres ni de sa propre xp
     - pas d'idée sur les éléments non connus
     - trop lent
+    - pas de peur
 
 
     Emo = choix target, décision de fuite
-    Cogn = évitement, satisfaction besoins urgents
+    Cogn = évitement, satisfaction besoins urgents, connaissances objectives, distance target
   
   
     Inné, Acquis (+ Apprentissage)

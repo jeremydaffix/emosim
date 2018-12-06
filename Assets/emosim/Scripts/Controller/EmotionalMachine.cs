@@ -11,11 +11,11 @@ public class EmotionalMachine
     List<SomaticMarker> somaticMemory = new List<SomaticMarker>();
 
     Dictionary<string, Perception> perceptions = new Dictionary<string, Perception>();
-    
     Dictionary<string, Emotion> emotions = new Dictionary<string, Emotion>();
-
     Dictionary<string, Need> needs = new Dictionary<string, Need>();
 
+
+    Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>();
 
 
     public void Create(Person p)
@@ -295,14 +295,61 @@ public class EmotionalMachine
 
 
 
-
-
-    public KeyValuePair<string, int> TakeEmotionalDecision()
+    public void AddPossibleAction(GameObject go, int score, PersonAction action)
     {
-        KeyValuePair<string, int> kvp = new KeyValuePair<string, int>();
-
-        return kvp;
+        PossibleActions.Add(go, new KeyValuePair<PersonAction, int>(action, score));
     }
+
+
+    public void CalcEmotionalActions()
+    {
+
+        List<GameObject> canSee = person.PersonActions.LookForThings();
+
+
+        PossibleActions.Clear();
+
+
+        foreach (GameObject go in canSee)
+        {
+            InteractiveObjectInstance ioi = go.GetComponent<InteractiveObjectInstance>();
+            Person p = go.GetComponent<Person>();
+
+            if (ioi != null) // we see an object
+            {
+                if (ioi.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE)
+                {
+
+
+                }
+
+                else
+                {
+                    person.EmotionalMachine.TestObject(ioi.InteractiveObject);
+
+                    int score = person.EmotionalMachine.CalcMood();
+
+                    if (Vector3.Distance(person.transform.position, go.transform.position) <= 1f)
+                        AddPossibleAction(go, score, person.PersonActions.ActionEat);
+
+                    else
+                        AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);
+                }
+            }
+
+            else // we see a person
+            {
+                // apprentissage ici !!!
+            }
+        }
+
+
+        //AddPossibleAction(person.gameObject, 0, person.PersonActions.ActionRandomWalk);
+
+
+    }
+
+
 
 
 
@@ -329,6 +376,19 @@ public class EmotionalMachine
         set
         {
             emotions = value;
+        }
+    }
+
+    public Dictionary<GameObject, KeyValuePair<PersonAction, int>> PossibleActions
+    {
+        get
+        {
+            return possibleActions;
+        }
+
+        set
+        {
+            possibleActions = value;
         }
     }
 }
