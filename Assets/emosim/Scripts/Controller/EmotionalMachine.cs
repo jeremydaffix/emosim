@@ -104,8 +104,8 @@ public class EmotionalMachine
 
         // besoins
 
-        needs["health"] = new Need("health", 10);
-        needs["satiety"] = new Need("satiety", 5);
+        Needs["health"] = new Need("health", 10f);
+        Needs["satiety"] = new Need("satiety", 5f, 0.04f);
 
 
 
@@ -214,11 +214,11 @@ public class EmotionalMachine
             }
         }
 
-        foreach (KeyValuePair<string, int> kvp in obj.NeedsSatisfied)
+        foreach (KeyValuePair<string, float> kvp in obj.NeedsSatisfied)
         {
-            if (needs.ContainsKey(kvp.Key))
+            if (Needs.ContainsKey(kvp.Key))
             {
-                Need n = needs[kvp.Key];
+                Need n = Needs[kvp.Key];
 
                 n.CurrentScore += kvp.Value;
             }
@@ -389,6 +389,19 @@ public class EmotionalMachine
         set
         {
             possibleActions = value;
+        }
+    }
+
+    public Dictionary<string, Need> Needs
+    {
+        get
+        {
+            return needs;
+        }
+
+        set
+        {
+            needs = value;
         }
     }
 }

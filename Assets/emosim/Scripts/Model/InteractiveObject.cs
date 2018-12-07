@@ -25,7 +25,7 @@ public class InteractiveObject
     List<string> triggerBySmell = new List<string>();
     List<string> triggerByTaste = new List<string>();
 
-    Dictionary<string, int> needsSatisfied = new Dictionary<string, int>();
+    Dictionary<string, float> needsSatisfied = new Dictionary<string, float>();
 
 
     float detectableFrom = 5.0f;
@@ -121,7 +121,7 @@ public class InteractiveObject
         }
     }
 
-    public Dictionary<string, int> NeedsSatisfied
+    public Dictionary<string, float> NeedsSatisfied
     {
         get
         {

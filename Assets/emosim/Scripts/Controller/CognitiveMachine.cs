@@ -50,7 +50,7 @@ public class CognitiveMachine
                     float dist = Vector3.Distance(person.transform.position, go.transform.position);
                     int score = -1 * (int)dist;
 
-                    if(dist <= 1f)
+                    if (dist <= 1f)
                         AddPossibleAction(go, 1, person.PersonActions.ActionEat);
 
                     else
@@ -66,18 +66,34 @@ public class CognitiveMachine
                 // apprentissage ici !!!
             }
         }
-        
-
-    }
 
 
-    public void TakeCognitiveDecision()
-    {
-        if(person.CollidingWith != null)
+        // collisions for obstacles avoidance
+
+        if (person.CollidingWith != null)
         {
+            int nbrTurnsSinceCollision = (Simulation.Instance.FrameCpt - person.CollidingSince) / Simulation.Instance.TurnDuration;
 
+            if (nbrTurnsSinceCollision > 1)
+            {
+                //AddPossibleAction(person.CollidingWith, nbrTurnsSinceCollision, person.PersonActions.ActionFleeTarget);
+                AddPossibleAction(person.CollidingWith, nbrTurnsSinceCollision * nbrTurnsSinceCollision, person.PersonActions.ActionRandomWalk);
+            }
         }
+
+        else if (person.IsBlockedSince != 0)
+        {
+            int nbrTurnsSinceBlocked = (Simulation.Instance.FrameCpt - person.IsBlockedSince) / Simulation.Instance.TurnDuration;
+
+            if (nbrTurnsSinceBlocked > 1)
+            {
+                //AddPossibleAction(person.gameObject, nbrTurnsSinceBlocked, person.PersonActions.ActionRandomWalk);
+                AddPossibleAction(person.gameObject, nbrTurnsSinceBlocked * nbrTurnsSinceBlocked, person.PersonActions.ActionRandomWalk);
+            }
+        }
+
     }
+
 
 
 

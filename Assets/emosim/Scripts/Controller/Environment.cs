@@ -19,7 +19,7 @@ public class Environment : MonoBehaviour
 
 
     Sprite[] fruitsAtlas, foodAtlas;
-    Sprite tree;
+    Sprite tree, skull;
 
     
 
@@ -45,6 +45,7 @@ public class Environment : MonoBehaviour
         foodAtlas = Resources.LoadAll<Sprite>("Sprites/food");
 
         tree = Resources.Load<Sprite>("Sprites/tree");
+        skull = Resources.Load<Sprite>("Sprites/skull");
     }
 
     public void LoadInteractiveObjectModels()
@@ -53,8 +54,8 @@ public class Environment : MonoBehaviour
         // model of interactive objects
 
         InteractiveObjects["apple"] = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD, fruitsAtlas[0]);
-        InteractiveObjects["apple"].NeedsSatisfied.Add("satiety", 1);
-        InteractiveObjects["apple"].NeedsSatisfied.Add("health", 1);
+        InteractiveObjects["apple"].NeedsSatisfied.Add("satiety", 1f);
+        InteractiveObjects["apple"].NeedsSatisfied.Add("health", 1f);
 
         InteractiveObjects["apple"].TriggerBySight.Add("looksGood");
         InteractiveObjects["apple"].TriggerBySmell.Add("smellsGood");
@@ -66,8 +67,8 @@ public class Environment : MonoBehaviour
 
 
         InteractiveObjects["carrot"] = new InteractiveObject("carrot", InteractiveObject.TYPE_FOOD, foodAtlas[3]);
-        InteractiveObjects["carrot"].NeedsSatisfied.Add("satiety", 1);
-        InteractiveObjects["carrot"].NeedsSatisfied.Add("health", 2);
+        InteractiveObjects["carrot"].NeedsSatisfied.Add("satiety", 1f);
+        InteractiveObjects["carrot"].NeedsSatisfied.Add("health", 2f);
 
         InteractiveObjects["carrot"].TriggerBySight.Add("looksBad");
         InteractiveObjects["carrot"].TriggerBySmell.Add("smellsNormal");
@@ -75,8 +76,8 @@ public class Environment : MonoBehaviour
 
 
         InteractiveObjects["endive"] = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD, fruitsAtlas[8]);
-        InteractiveObjects["endive"].NeedsSatisfied.Add("satiety", 2);
-        InteractiveObjects["endive"].NeedsSatisfied.Add("health", 3);
+        InteractiveObjects["endive"].NeedsSatisfied.Add("satiety", 2f);
+        InteractiveObjects["endive"].NeedsSatisfied.Add("health", 3f);
 
         InteractiveObjects["endive"].TriggerBySight.Add("looksNormal");
         InteractiveObjects["endive"].TriggerBySmell.Add("smellsBad");
@@ -87,8 +88,8 @@ public class Environment : MonoBehaviour
 
 
         InteractiveObjects["chanterelle"] = new InteractiveObject("chanterelle", InteractiveObject.TYPE_MUSHROOM);
-        InteractiveObjects["chanterelle"].NeedsSatisfied.Add("satiety", 1);
-        InteractiveObjects["chanterelle"].NeedsSatisfied.Add("health", 0);
+        InteractiveObjects["chanterelle"].NeedsSatisfied.Add("satiety", 1f);
+        InteractiveObjects["chanterelle"].NeedsSatisfied.Add("health", 0f);
 
         InteractiveObjects["chanterelle"].TriggerBySight.Add("looksNormal");
         InteractiveObjects["chanterelle"].TriggerBySmell.Add("smellsNormal");
@@ -96,8 +97,8 @@ public class Environment : MonoBehaviour
 
 
         InteractiveObjects["amanita"] = new InteractiveObject("amanita", InteractiveObject.TYPE_MUSHROOM);
-        InteractiveObjects["amanita"].NeedsSatisfied.Add("satiety", 1);
-        InteractiveObjects["amanita"].NeedsSatisfied.Add("health", -4);
+        InteractiveObjects["amanita"].NeedsSatisfied.Add("satiety", 1f);
+        InteractiveObjects["amanita"].NeedsSatisfied.Add("health", -4f);
 
         InteractiveObjects["amanita"].TriggerBySight.Add("looksGood");
         InteractiveObjects["amanita"].TriggerBySmell.Add("smellsNormal");

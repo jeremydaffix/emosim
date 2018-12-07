@@ -52,6 +52,16 @@ using System.Collections;
     Fusion de perceptions de différentes sources
 
 
+    TODO
+    equilibrer needs et ratio avant d'ajouter d'autres elements !
+    peur
+    empathie
+    needs
+    animaux
+    champipis
+    truc fat
+    params
+    stats
 
 */
 
@@ -62,12 +72,13 @@ public class Simulation : MonoBehaviour
 
 
     public int TurnDuration = 60; // in frames, at 60fps : 60 = 1s per turn
-    public int TurnCpt = 0;
+    public int FrameCpt = 0;
 
     public int NbrPersons = 2;
     public int NbrObstacles = 10;
     public int NbrObjects = 20;
 
+    public float RatioEmoCogn = 1f; // < 1 : more emotion, > 1 : more cognition
 
 
 
@@ -93,6 +104,6 @@ public class Simulation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ++TurnCpt;
+        ++FrameCpt;
     }
 }

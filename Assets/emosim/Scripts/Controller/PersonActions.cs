@@ -116,11 +116,13 @@ public class PersonActions
 
     void Walk(GameObject dontUse = null)
     {
+        Vector3 initPos = person.transform.position;
+
         if (person.transform.position.x + walkingDir.x < -Environment.Instance.borderX || person.transform.position.x + walkingDir.x > Environment.Instance.borderX) walkingDir.x = walkingDir.x * -1;
         if (person.transform.position.y + walkingDir.y < -Environment.Instance.borderY || person.transform.position.y + walkingDir.y > Environment.Instance.borderY) walkingDir.y = walkingDir.y * -1;
 
 
-        person.GetComponent<Rigidbody2D>().MovePosition(person.transform.position + (walkingDir / 2f));
+        person.GetComponent<Rigidbody2D>().MovePosition(initPos + (walkingDir / 2f));
 
         cptWalking--;
 

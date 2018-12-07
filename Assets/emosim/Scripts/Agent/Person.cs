@@ -28,9 +28,17 @@ public class Person : MonoBehaviour
     PersonActions personActions; // methods to make the agent do something (walk,...)
 
     GameObject collidingWith = null;
+    int collidingSince = 0;
+    int isBlockedSince = 0;
 
 
     public float LookRange = 3.0f; // how far we can see things
+
+
+    int deadSince = -1;
+
+    public Sprite skull;
+
 
 
     void Start()
@@ -65,16 +73,66 @@ public class Person : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(Simulation.Instance.TurnCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
+        if(DeadSince == -1 && Simulation.Instance.FrameCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
         {
-            mind.TakeDecision();
+            int currentTurn = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
+
+
+            Vector3 initPos = transform.position;
+
+
+            KeyValuePair<PersonAction, GameObject> actionToDo = mind.TakeDecision(); // calc the best action
+            actionToDo.Key(actionToDo.Value); // do the action, giving an optional target
+
+
+            // needs
+
+            foreach (KeyValuePair<string, Need> kvp in EmotionalMachine.Needs)
+            {
+                kvp.Value.CurrentScore -= kvp.Value.DecreaseByTurn;
+
+                Debug.Log(kvp.Key + " => " + kvp.Value.CurrentScore);
+
+                if (kvp.Value.CurrentScore <= 0f) // RIP
+                {
+                    Die(kvp.Value);
+                }
+
+            }
+
+
+            // detects if the agent is blocked in his will to walk towards an object
+
+            if (actionToDo.Key == PersonActions.ActionWalkToTarget)
+            {
+                // physics collision with obstacles is not detected every time
+                // so we check if the agent has moved during the action !
+
+                if ((IsBlockedSince == 0) && ((transform.position - initPos).magnitude < 0.1f))
+                {
+                    IsBlockedSince = Simulation.Instance.FrameCpt;
+                }
+            }
+
+            else
+            {
+                IsBlockedSince = 0;
+            }
         }
     }
 
 
 
 
+    void Die(Need from)
+    {
+        //Destroy(gameObject, 3f);
+        GetComponent<SpriteRenderer>().sprite = skull;
 
+        DeadSince = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
+
+        Debug.Log("DIE FROM " + from.Name);
+    }
 
 
 
@@ -85,6 +143,7 @@ public class Person : MonoBehaviour
         //Debug.Log("COLLENTER");
 
         collidingWith = collision.gameObject;
+        CollidingSince = Simulation.Instance.FrameCpt;
     }
 
 
@@ -94,6 +153,7 @@ public class Person : MonoBehaviour
         //Debug.Log("COLLEXIT");
 
         CollidingWith = null;
+        CollidingSince = 0;
     }
 
 
@@ -269,6 +329,19 @@ public class Person : MonoBehaviour
         }
     }
 
+    public int CollidingSince
+    {
+        get
+        {
+            return collidingSince;
+        }
+
+        set
+        {
+            collidingSince = value;
+        }
+    }
+
     public CognitiveMachine CognitiveMachine
     {
         get
@@ -279,6 +352,32 @@ public class Person : MonoBehaviour
         set
         {
             cognitiveMachine = value;
+        }
+    }
+
+    public int IsBlockedSince
+    {
+        get
+        {
+            return isBlockedSince;
+        }
+
+        set
+        {
+            isBlockedSince = value;
+        }
+    }
+
+    public int DeadSince
+    {
+        get
+        {
+            return deadSince;
+        }
+
+        set
+        {
+            deadSince = value;
         }
     }
 }

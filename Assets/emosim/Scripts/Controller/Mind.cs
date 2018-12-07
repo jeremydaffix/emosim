@@ -15,8 +15,10 @@ public class Mind
     }
 
 
-    public void TakeDecision()
+    public KeyValuePair<PersonAction, GameObject> TakeDecision()
     {
+        KeyValuePair<PersonAction, GameObject> actionToDo = new KeyValuePair<PersonAction, GameObject>();
+
         //Debug.Log("PERSON TURN");
 
         //mind.TakeDecision();
@@ -31,7 +33,7 @@ public class Mind
        foreach (KeyValuePair<GameObject, KeyValuePair<PersonAction, int>> pa in person.CognitiveMachine.PossibleActions)
         {
             GameObject target = pa.Key;
-            int cognitiveScore = pa.Value.Value; // * coef
+            int cognitiveScore = Mathf.RoundToInt(pa.Value.Value * Simulation.Instance.RatioEmoCogn); // * coef
             PersonAction cognitiveAction = pa.Value.Key;
 
             int mergedScore = cognitiveScore;
@@ -104,141 +106,16 @@ public class Mind
             }
         }
 
-        bestAction(bestTarget);
-    }
+
+        //bestAction(bestTarget);
 
 
+        actionToDo = new KeyValuePair<PersonAction, GameObject>(bestAction, bestTarget);
 
-
-    /*public void TakeDecision()
-    {
-        //Random.seed = System.Environment.TickCount;
-
-        List <GameObject> canSee = person.PersonActions.LookForThings();
-
-
-        GameObject bestTarget = null;
-        int bestTargetScore = 0;
-
-        LineRenderer lr = person.GetComponent<LineRenderer>();
-        lr.positionCount = 0;
-
-        TextMesh tm = person.GetComponentInChildren<TextMesh>();
-        tm.text = "";
-
-
-        foreach (GameObject go in canSee)
-        {
-            InteractiveObjectInstance ioi = go.GetComponent<InteractiveObjectInstance>();
-            Person p = go.GetComponent<Person>();
-
-            if (ioi != null) // we see an object
-            {
-                if (ioi.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE)
-                {
-
-
-                }
-
-                else
-                {
-                    //Debug.Log("** SEE " + ioi.InteractiveObjectName);
-                    person.EmotionalMachine.TestObject(ioi.InteractiveObject);
-
-                    int score = person.EmotionalMachine.CalcMood();
-
-                    if ((score > bestTargetScore) ||
-                        (score == bestTargetScore && Vector3.Distance(person.transform.position, go.transform.position) < Vector3.Distance(person.transform.position, bestTarget.transform.position)))
-                    {
-                        bestTarget = go;
-                        bestTargetScore = score;
-                    }
-                }
-            }
-
-            else // we see a person
-            {
-                // apprentissage ici !!!
-            }
-        }
-
-
-        if(bestTargetScore > 0)
-        {
-            if (Vector3.Distance(person.transform.position, bestTarget.transform.position) <= 1f)
-            {
-                person.PersonActions.ActionEat(bestTarget);
-
-                int score = person.EmotionalMachine.CalcMood();
-                string txt;
-                Color col;
-
-                if (score < -5)
-                {
-                    txt = "- -";
-                    col = new Color(1f, 0f, 0f);
-                }
-
-                else if (score < -2)
-                {
-                    txt = " - ";
-                    col = new Color(1.0f, 0.5f, 0f);
-                }
-
-                else if (score < 3)
-                {
-                    txt = "...";
-                    col = new Color(1f, 1f, 1f);
-                }
-
-                else if (score < 5)
-                {
-                    txt = " + ";
-                    col = new Color(0f, 0.5f, 1.0f);
-                }
-
-                else
-                {
-                    txt = "++";
-                    col = new Color(0f, 1f, 0f);
-                }
-
-                tm.text = txt;
-                tm.color = col;
-            }
-
-            else
-            {
-                person.PersonActions.ActionWalkToTarget(bestTarget);
-
-                lr.positionCount = 2;
-                lr.SetPosition(0, person.transform.position);
-                lr.SetPosition(1, bestTarget.transform.position);
-            }
-            
-        }
-
-
-        else
-        {
-            // default behaviour :
-            // random walking
-
-            person.PersonActions.ActionRandomWalk(null);
-        }
-    }*/
-
-
-    /*void CognitiveProcess()
-    {
+        return actionToDo;
 
     }
-
-    void EmotionalProcess()
-    {
-
-    }*/
-
+    
 
     
 }

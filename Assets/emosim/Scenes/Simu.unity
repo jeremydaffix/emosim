@@ -220,11 +220,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b9e4bc7bfcfd304b8539d347e05ac45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TurnDuration: 15
-  TurnCpt: 0
-  NbrPersons: 2
-  NbrObstacles: 10
+  TurnDuration: 5
+  FrameCpt: 0
+  NbrPersons: 1
+  NbrObstacles: 20
   NbrObjects: 20
+  RatioEmoCogn: 1
 --- !u!1 &908081477
 GameObject:
   m_ObjectHideFlags: 0

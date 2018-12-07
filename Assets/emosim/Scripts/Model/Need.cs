@@ -6,13 +6,18 @@ using System.Collections;
 public class Need
 {
     string name;
-    int currentScore;
+    float currentScore;
+    float decreaseByTurn;
 
-    public Need(string _name, int _currentScore = 5)
+    public Need(string _name, float _currentScore = 5, float _decreaseByTurn = 0f)
     {
         Name = _name;
         CurrentScore = _currentScore;
+        DecreaseByTurn = _decreaseByTurn;
     }
+
+    
+
 
     public string Name
     {
@@ -27,7 +32,7 @@ public class Need
         }
     }
 
-    public int CurrentScore
+    public float CurrentScore
     {
         get
         {
@@ -37,6 +42,21 @@ public class Need
         set
         {
             currentScore = value;
+            if (currentScore > 10f) currentScore = 10f; // 10 max
+            else if (currentScore < 0f) currentScore = 0f; // 0 min
+        }
+    }
+
+    public float DecreaseByTurn
+    {
+        get
+        {
+            return decreaseByTurn;
+        }
+
+        set
+        {
+            decreaseByTurn = value;
         }
     }
 }
