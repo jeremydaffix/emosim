@@ -6,6 +6,8 @@ public class CognitiveMachine
 {
     Person person;
 
+    Dictionary<string, Need> needs = new Dictionary<string, Need>();
+
     Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>();
 
 
@@ -13,11 +15,17 @@ public class CognitiveMachine
 
 
 
-    public CognitiveMachine(Person p)
+
+    public void Create(Person p)
     {
         person = p;
-    }
 
+
+        // besoins
+
+        Needs["health"] = new Need("health", 10f, 0.01f);
+        Needs["satiety"] = new Need("satiety", 5f, 0.04f);
+    }
 
 
     public void AddPossibleAction(GameObject go, int score, PersonAction action)
@@ -57,13 +65,14 @@ public class CognitiveMachine
 
                     // weight with needs (KNOWLEDGE of what is "good" for you)
 
-                    foreach (KeyValuePair<string, Need> kvp in person.EmotionalMachine.Needs)
+                    foreach (KeyValuePair<string, Need> kvp in Needs)
                     {
-                        if (kvp.Value.CurrentScore < 5f) // need trigger!
+                        float sat = ioi.InteractiveObject.NeedsSatisfied[kvp.Key];
+
+                        if (kvp.Value.CurrentScore < 5f /*&& sat > 0f*/) // need trigger!
                         {
-                            float sat = ioi.InteractiveObject.NeedsSatisfied[kvp.Key];
-                            score += Mathf.RoundToInt(sat * sat * sat * 5); // the most the need is satisfied by the object, bigger the score
-                            //Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
+                            score += Mathf.RoundToInt(sat * sat * sat * 10f); // the most the need is satisfied by the object, bigger the score
+                            Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
                         }
                     }
 
@@ -156,4 +165,16 @@ public class CognitiveMachine
         }
     }
 
+    public Dictionary<string, Need> Needs
+    {
+        get
+        {
+            return needs;
+        }
+
+        set
+        {
+            needs = value;
+        }
+    }
 }

@@ -12,10 +12,12 @@ public class EmotionalMachine
 
     Dictionary<string, Perception> perceptions = new Dictionary<string, Perception>();
     Dictionary<string, Emotion> emotions = new Dictionary<string, Emotion>();
-    Dictionary<string, Need> needs = new Dictionary<string, Need>();
+    //Dictionary<string, Need> needs = new Dictionary<string, Need>();
+
+    Dictionary<Emotion, int> lastEmotions = new Dictionary<Emotion, int>();
 
 
-    Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>();
+     Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>();
 
 
     public void Create(Person p)
@@ -76,7 +78,7 @@ public class EmotionalMachine
 
         // emotions
 
-        emotions["fear"] = new Emotion("fear", -2);
+        emotions["fear"] = new Emotion("fear", -3);
         emotions["fear"].AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["stressHormones"]).AddPerception(perceptions["frightenedFace"]).AddPerception(perceptions["frightenedPosture"]).AddPerception(perceptions["looksTerrifying"]);
 
         emotions["pleasure"] = new Emotion("pleasure", 2);
@@ -104,22 +106,22 @@ public class EmotionalMachine
 
         // besoins
 
-        Needs["health"] = new Need("health", 10f, 0.01f);
-        Needs["satiety"] = new Need("satiety", 5f, 0.04f);
+        //Needs["health"] = new Need("health", 10f, 0.01f);
+        //Needs["satiety"] = new Need("satiety", 5f, 0.04f);
 
 
 
         // marqueurs somatiques innés
 
-        SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, Environment.Instance.InteractiveObjects["amanita"]));
-        amanitaSM.Perceptions.Add(perceptions["wantToVomit"]);
-        amanitaSM.Perceptions.Add(perceptions["painHormones"]);
-        SomaticMemory.Add(amanitaSM);
+        if (Simulation.Instance.InnateEnabled)
+        {
+            SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, Environment.Instance.InteractiveObjects["amanita"]));
+            amanitaSM.Perceptions.Add(perceptions["wantToVomit"]);
+            amanitaSM.Perceptions.Add(perceptions["painHormones"]);
+            SomaticMemory.Add(amanitaSM);
+        }
 
-
-
-        // connaissances (= on sait que, mais sans trigger de perceptions)
-        // (dans mind ???)
+        
 
     }
 
@@ -127,6 +129,8 @@ public class EmotionalMachine
     public int CalcMood()
     {
         Dictionary<Emotion, int> em = CalcEmotions();
+
+        lastEmotions = em;
 
         int score = 0;
 
@@ -138,11 +142,11 @@ public class EmotionalMachine
 
                 score += (kvp.Key.DesirabilityScore * kvp.Value);
             }
-
-            // ...
         }
 
         //Debug.Log("MOOD : " + score);
+
+       
 
         return score;
     }
@@ -204,23 +208,16 @@ public class EmotionalMachine
 
     public void TasteObject(InteractiveObject obj)
     {
-        foreach (string s in obj.TriggerByTaste)
+        if (Simulation.Instance.InnateEnabled)
         {
-            if (perceptions.ContainsKey(s))
+            foreach (string s in obj.TriggerByTaste)
             {
-                Perception p = perceptions[s];
+                if (perceptions.ContainsKey(s))
+                {
+                    Perception p = perceptions[s];
 
-                p.Organ.State = p.State;
-            }
-        }
-
-        foreach (KeyValuePair<string, float> kvp in obj.NeedsSatisfied)
-        {
-            if (Needs.ContainsKey(kvp.Key))
-            {
-                Need n = Needs[kvp.Key];
-
-                n.CurrentScore += kvp.Value;
+                    p.Organ.State = p.State;
+                }
             }
         }
     }
@@ -249,8 +246,13 @@ public class EmotionalMachine
     public void TestObject(InteractiveObject obj)
     {
         person.EmotionalMachine.ResetPerceptions();
-        person.EmotionalMachine.SeeObject(obj);
-        person.EmotionalMachine.SmellObject(obj);
+
+        if (Simulation.Instance.InnateEnabled)
+        {
+            person.EmotionalMachine.SeeObject(obj);
+            person.EmotionalMachine.SmellObject(obj);
+        }
+
         person.EmotionalMachine.RememberObject(obj);
 
         //person.EmotionalMachine.EatObject(obj);
@@ -331,11 +333,22 @@ public class EmotionalMachine
 
                     int score = person.EmotionalMachine.CalcMood();
 
-                    if (Vector3.Distance(person.transform.position, go.transform.position) <= 1f)
+                    if (lastEmotions.ElementAt(0).Key == emotions["fear"] && Vector3.Distance(person.transform.position, go.transform.position) <= (person.LookRange / 1.8f))
+                    {
+                        //Debug.Log("FEAR");
+                        AddPossibleAction(go, Mathf.RoundToInt(20f * Simulation.Instance.EmotionalWeight), person.PersonActions.ActionFleeTarget);
+                    }
+
+                    else if (Vector3.Distance(person.transform.position, go.transform.position) <= 1f)
+                    {
                         AddPossibleAction(go, score, person.PersonActions.ActionEat);
+                    }
 
                     else
+                    {
                         AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);
+                    }
+                        
                 }
             }
 
@@ -394,7 +407,20 @@ public class EmotionalMachine
         }
     }
 
-    public Dictionary<string, Need> Needs
+    public Dictionary<Emotion, int> LastEmotions
+    {
+        get
+        {
+            return lastEmotions;
+        }
+
+        set
+        {
+            lastEmotions = value;
+        }
+    }
+
+    /*public Dictionary<string, Need> Needs
     {
         get
         {
@@ -405,5 +431,5 @@ public class EmotionalMachine
         {
             needs = value;
         }
-    }
+    }*/
 }

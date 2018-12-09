@@ -19,7 +19,7 @@ public class Environment : MonoBehaviour
 
 
     Sprite[] fruitsAtlas, foodAtlas;
-    Sprite tree, skull;
+    Sprite tree, skull, snake, amanita;
 
     
 
@@ -48,6 +48,8 @@ public class Environment : MonoBehaviour
 
         tree = Resources.Load<Sprite>("Sprites/tree");
         skull = Resources.Load<Sprite>("Sprites/skull");
+        snake = Resources.Load<Sprite>("Sprites/snake");
+        amanita = Resources.Load<Sprite>("Sprites/amanita");
     }
 
     public void LoadInteractiveObjectModels()
@@ -102,18 +104,18 @@ public class Environment : MonoBehaviour
         InteractiveObjects["burger"].TriggerByTaste.Add("happyPosture");
 
 
-        InteractiveObjects["chanterelle"] = new InteractiveObject("chanterelle", InteractiveObject.TYPE_FOOD);
+        /*InteractiveObjects["chanterelle"] = new InteractiveObject("chanterelle", InteractiveObject.TYPE_FOOD);
         InteractiveObjects["chanterelle"].NeedsSatisfied.Add("satiety", 1f);
         InteractiveObjects["chanterelle"].NeedsSatisfied.Add("health", 0f);
 
         InteractiveObjects["chanterelle"].TriggerBySight.Add("looksNormal");
         InteractiveObjects["chanterelle"].TriggerBySmell.Add("smellsNormal");
-        InteractiveObjects["chanterelle"].TriggerByTaste.Add("tastesGood");
+        InteractiveObjects["chanterelle"].TriggerByTaste.Add("tastesGood");*/
 
 
-        InteractiveObjects["amanita"] = new InteractiveObject("amanita", InteractiveObject.TYPE_FOOD);
+        InteractiveObjects["amanita"] = new InteractiveObject("amanita", InteractiveObject.TYPE_FOOD, amanita);
         InteractiveObjects["amanita"].NeedsSatisfied.Add("satiety", 1f);
-        InteractiveObjects["amanita"].NeedsSatisfied.Add("health", -4f);
+        InteractiveObjects["amanita"].NeedsSatisfied.Add("health", -8f);
 
         InteractiveObjects["amanita"].TriggerBySight.Add("looksGood");
         InteractiveObjects["amanita"].TriggerBySmell.Add("smellsNormal");
@@ -123,6 +125,30 @@ public class Environment : MonoBehaviour
         InteractiveObjects["amanita"].TriggerByTaste.Add("painHormones");
         InteractiveObjects["amanita"].TriggerByTaste.Add("sadFace");
         InteractiveObjects["amanita"].TriggerByTaste.Add("closedPosture");
+
+
+
+
+        InteractiveObjects["snake"] = new InteractiveObject("snake", InteractiveObject.TYPE_ANIMAL, snake);
+        InteractiveObjects["snake"].NeedsSatisfied.Add("satiety", 3f);
+        InteractiveObjects["snake"].NeedsSatisfied.Add("health", -8f); // a skake bites :(
+
+        // a snake is SCARY
+        InteractiveObjects["snake"].TriggerBySight.Add("fastHeartBeat");
+        InteractiveObjects["snake"].TriggerBySight.Add("stomachAche");
+        InteractiveObjects["snake"].TriggerBySight.Add("stressHormones");
+        InteractiveObjects["snake"].TriggerBySight.Add("frightenedFace");
+        InteractiveObjects["snake"].TriggerBySight.Add("frightenedPosture");
+        InteractiveObjects["snake"].TriggerBySight.Add("looksTerrifying");
+
+        InteractiveObjects["snake"].TriggerBySmell.Add("smellsNormal");
+        InteractiveObjects["snake"].TriggerByTaste.Add("tastesNormal");
+
+        // if you get bitten, you will be sick
+        InteractiveObjects["snake"].TriggerByTaste.Add("wantToVomit");
+        InteractiveObjects["snake"].TriggerByTaste.Add("painHormones");
+        InteractiveObjects["snake"].TriggerByTaste.Add("sadFace");
+        InteractiveObjects["snake"].TriggerByTaste.Add("closedPosture");
 
 
 
@@ -147,7 +173,7 @@ public class Environment : MonoBehaviour
 
         // interactive objects
 
-        int mod = 4;
+        int mod = 5;
 
         for (int i = 0 ; i < Simulation.Instance.NbrObjects ; ++i)
         {
@@ -156,8 +182,22 @@ public class Environment : MonoBehaviour
             if (i % mod == 1) CreateRandomInteractiveObject("carrot");
             if (i % mod == 2) CreateRandomInteractiveObject("endive");
             if (i % mod == 3) CreateRandomInteractiveObject("burger");
+            if (i % mod == 4) CreateRandomInteractiveObject("amanita");
         }
 
+
+        // animals
+
+        int mod2 = 1;
+
+        for (int i = 0; i < Simulation.Instance.NbrAnimals; ++i)
+        {
+
+            if (i % mod2 == 0) CreateRandomInteractiveObject("snake");
+        }
+
+
+        // obstacles
 
         for (int i = 0; i < Simulation.Instance.NbrObstacles; ++i)
         {
@@ -190,7 +230,15 @@ public class Environment : MonoBehaviour
 
         i.GetComponent<SpriteRenderer>().sprite = i.InteractiveObject.Sprite;
 
-        if (i.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE) i.GetComponent<BoxCollider2D>().enabled = true;
+        if (i.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE || i.InteractiveObject.Type == InteractiveObject.TYPE_ANIMAL)
+        {
+            i.GetComponent<BoxCollider2D>().enabled = true;
+
+            if(i.InteractiveObject.Type == InteractiveObject.TYPE_ANIMAL)
+            {
+                i.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
+            }
+        }
 
         interactiveObjectInstances.Add(i);
     }
@@ -306,9 +354,9 @@ public class Environment : MonoBehaviour
                 }
             }
 
-            else if(action == person.PersonActions.ActionFleeTarget)
+            else if(action == person.PersonActions.ActionFleeTarget) // FEAR
             {
-                color = new Color(0.2f, 0.2f, 0.2f);
+                color = new Color(0f, 0f, 1f);
             }
 
             sr.color = color;

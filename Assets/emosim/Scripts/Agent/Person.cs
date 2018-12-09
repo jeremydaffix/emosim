@@ -48,7 +48,7 @@ public class Person : MonoBehaviour
     void Start()
     {
         EmotionalMachine = new EmotionalMachine();
-        CognitiveMachine = new CognitiveMachine(this);
+        CognitiveMachine = new CognitiveMachine();
 
         Mind = new Mind(this);
 
@@ -64,6 +64,7 @@ public class Person : MonoBehaviour
         palateSensor = new Organ("palateSensor");
 
 
+        cognitiveMachine.Create(this);
         emotionalMachine.Create(this);
 
         personActions = new PersonActions(this);
@@ -92,7 +93,7 @@ public class Person : MonoBehaviour
             lastPos = initPos;
             lastAction = actionToDo.Key;
 
-            Debug.Log(lastAction.Method.Name);
+            //Debug.Log(lastAction.Method.Name);
         }
     }
 
@@ -129,7 +130,7 @@ public class Person : MonoBehaviour
     {
         // needs
 
-        foreach (KeyValuePair<string, Need> kvp in EmotionalMachine.Needs)
+        foreach (KeyValuePair<string, Need> kvp in CognitiveMachine.Needs)
         {
             kvp.Value.CurrentScore -= kvp.Value.DecreaseByTurn;
 
@@ -138,7 +139,7 @@ public class Person : MonoBehaviour
             if (kvp.Value.CurrentScore <= 0f)
             {
                 if(kvp.Key.Equals("health")) Die(kvp.Value); // health = 0 : RIP
-                else EmotionalMachine.Needs["health"].CurrentScore -= 0.5f; // satiety or other = 0 : slowly dying
+                else CognitiveMachine.Needs["health"].CurrentScore -= 0.5f; // satiety or other = 0 : slowly dying
             }
 
         }

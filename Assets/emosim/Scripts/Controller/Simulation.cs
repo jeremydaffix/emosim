@@ -37,7 +37,7 @@ using System.Collections;
     - ne remet pas en cause ses instincts
     - emo perd de son intérêt
 
-
+    Inné = sensors + ms innés
 
     Immédiat = perceptions vue, odorat, goût
     Anticipation = remember object
@@ -54,31 +54,25 @@ using System.Collections;
 
 
 
-
-    TODO
-
-    peur
-    empathie
-    needs
-    animaux
-    champipis
-    truc fat
-
-    params
-    stats
-
-    meilleur évitement obstacles
-
+    
     si satiety < x alors augmenter score aliment selon remplissage besoin satiety
     si health < x alors réduire score aliment selon impact besoin health
 
-    si target depuis trop longtemps on en change ?
 
 
-    choses en cours
-    map
-    randomwalk after obstacle
-    needs
+    TODO
+
+    pb needs
+    empathie / apprentissage autrui
+
+    contrôles simu
+    params
+    stats
+
+    équilibrer
+    voir si les scénarios marchent
+
+    
 
 */
 
@@ -94,11 +88,14 @@ public class Simulation : MonoBehaviour
     public int NbrPersons = 2;
     public int NbrObstacles = 10;
     public int NbrObjects = 20;
+    public int NbrAnimals = 3;
 
     public float EmotionalWeight = 1f;
     public float CognitiveWeight = 1f;
 
     public int Seed = 4242; // -1 if no seed
+
+    public bool InnateEnabled = true;
 
 
     Person desirabilityView = null;

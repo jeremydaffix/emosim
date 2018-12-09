@@ -100,16 +100,26 @@ public class PersonActions
         Walk();
 
         lr.positionCount = 2;
+        lr.startColor = new Color(0f,1f,0f);
+        lr.endColor = new Color(0f, 1f, 0f);
         lr.SetPosition(0, person.transform.position + (walkingDir / 2f));
         lr.SetPosition(1, target.transform.position);
+
+        // 8EF301
     }
 
     void FleeTarget(GameObject target)
     {
-        walkingDir = (target.transform.position - person.transform.position).normalized * -1;
-        cptWalking = 1;
+        walkingDir = (target.transform.position - person.transform.position).normalized * -1.5f;
+        cptWalking = 2;
 
         Walk();
+
+        lr.positionCount = 2;
+        lr.startColor = new Color(1f, 0f, 0f);
+        lr.endColor = new Color(1f, 0f, 0f);
+        lr.SetPosition(0, person.transform.position + (walkingDir / 2f));
+        lr.SetPosition(1, target.transform.position);
     }
 
 
@@ -138,7 +148,18 @@ public class PersonActions
             person.EmotionalMachine.ResetPerceptions();
             person.EmotionalMachine.TasteObject(ioi.InteractiveObject);
             person.EmotionalMachine.SaveInSomaticMemory(ioi.InteractiveObject);
-            // needs ?
+
+
+            foreach (KeyValuePair<string, float> kvp in ioi.InteractiveObject.NeedsSatisfied)
+            {
+                if (person.CognitiveMachine.Needs.ContainsKey(kvp.Key))
+                {
+                    Need n = person.CognitiveMachine.Needs[kvp.Key];
+
+                    n.CurrentScore += kvp.Value;
+                }
+            }
+
 
             Environment.Instance.RecycleInteractiveObject(ioi);
         }

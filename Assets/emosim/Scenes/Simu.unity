@@ -222,12 +222,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TurnDuration: 5
   FrameCpt: 0
-  NbrPersons: 1
-  NbrObstacles: 15
+  NbrPersons: 3
+  NbrObstacles: 10
   NbrObjects: 20
+  NbrAnimals: 2
   EmotionalWeight: 1
   CognitiveWeight: 1
   Seed: 4242
+  InnateEnabled: 1
 --- !u!1 &908081477
 GameObject:
   m_ObjectHideFlags: 0
