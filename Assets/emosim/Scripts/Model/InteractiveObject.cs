@@ -12,8 +12,8 @@ public class InteractiveObject
 
     public const int TYPE_FOOD = 0;
     public const int TYPE_ANIMAL = 1;
-    public const int TYPE_MUSHROOM = 2;
-    public const int TYPE_OBSTACLE = 3;
+    //public const int TYPE_MUSHROOM = 2;
+    public const int TYPE_OBSTACLE = 2;
 
     Sprite sprite;
 

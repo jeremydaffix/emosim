@@ -9,6 +9,9 @@ public class CognitiveMachine
     Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>();
 
 
+    int cptAvoidObstacle = 0;
+
+
 
     public CognitiveMachine(Person p)
     {
@@ -19,7 +22,9 @@ public class CognitiveMachine
 
     public void AddPossibleAction(GameObject go, int score, PersonAction action)
     {
-        PossibleActions.Add(go, new KeyValuePair<PersonAction, int>(action, score));
+        //if (score < 0) return;
+
+        PossibleActions.Add(go, new KeyValuePair<PersonAction, int>(action, Mathf.RoundToInt(score * Simulation.Instance.CognitiveWeight)));
     }
 
 
@@ -47,16 +52,37 @@ public class CognitiveMachine
 
                 else
                 {
-                    float dist = Vector3.Distance(person.transform.position, go.transform.position);
-                    int score = -1 * (int)dist;
+                    int score = 0;
+
+
+                    // weight with needs (KNOWLEDGE of what is "good" for you)
+
+                    foreach (KeyValuePair<string, Need> kvp in person.EmotionalMachine.Needs)
+                    {
+                        if (kvp.Value.CurrentScore < 5f) // need trigger!
+                        {
+                            float sat = ioi.InteractiveObject.NeedsSatisfied[kvp.Key];
+                            score += Mathf.RoundToInt(sat * sat * sat * 5); // the most the need is satisfied by the object, bigger the score
+                            //Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
+                        }
+                    }
+
+
+
+                    // weight with distance
+
+                   /* float dist = Vector3.Distance(person.transform.position, go.transform.position);
+                    score += (-1 * (int)dist);
+
+
 
                     if (dist <= 1f)
                         AddPossibleAction(go, 1, person.PersonActions.ActionEat);
 
                     else
-                        AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);
+                        AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);*/
 
-
+                    //Debug.Log(score);
                     // distance + needs + knowledge + pathfinding
                 }
             }
@@ -68,9 +94,11 @@ public class CognitiveMachine
         }
 
 
+
         // collisions for obstacles avoidance
 
-        if (person.CollidingWith != null)
+        // colliding with obstacle
+        /*if (person.CollidingWith != null)
         {
             int nbrTurnsSinceCollision = (Simulation.Instance.FrameCpt - person.CollidingSince) / Simulation.Instance.TurnDuration;
 
@@ -78,18 +106,32 @@ public class CognitiveMachine
             {
                 //AddPossibleAction(person.CollidingWith, nbrTurnsSinceCollision, person.PersonActions.ActionFleeTarget);
                 AddPossibleAction(person.CollidingWith, nbrTurnsSinceCollision * nbrTurnsSinceCollision, person.PersonActions.ActionRandomWalk);
+                //cptAvoidObstacle = 3;
             }
-        }
+        }*/
 
-        else if (person.IsBlockedSince != 0)
+
+        // no collision but blocked
+        /*else*/ if (person.IsBlockedSince != 0)
         {
             int nbrTurnsSinceBlocked = (Simulation.Instance.FrameCpt - person.IsBlockedSince) / Simulation.Instance.TurnDuration;
 
-            if (nbrTurnsSinceBlocked > 1)
+            if (nbrTurnsSinceBlocked > 2)
             {
                 //AddPossibleAction(person.gameObject, nbrTurnsSinceBlocked, person.PersonActions.ActionRandomWalk);
                 AddPossibleAction(person.gameObject, nbrTurnsSinceBlocked * nbrTurnsSinceBlocked, person.PersonActions.ActionRandomWalk);
+                cptAvoidObstacle = 3;
+                //Debug.Log("BLOCKED");
             }
+        }
+
+
+        // not colliding anymore / unblocked but we have to keep walking some turns to do a successful avoidance
+        else if(cptAvoidObstacle > 0)
+        {
+            //Debug.Log("CPTBLOCKED");
+            AddPossibleAction(person.gameObject, 20, person.PersonActions.ActionRandomWalk);
+            cptAvoidObstacle--;
         }
 
     }

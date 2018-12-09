@@ -19,6 +19,7 @@ using System.Collections;
     - pas d'idée sur les éléments non connus
     - trop lent
     - pas de peur
+    - flemme objets loin (à compenser de toute manière avec cogn needs urgents)
 
 
     Emo = choix target, décision de fuite
@@ -52,16 +53,32 @@ using System.Collections;
     Fusion de perceptions de différentes sources
 
 
+
+
     TODO
-    equilibrer needs et ratio avant d'ajouter d'autres elements !
+
     peur
     empathie
     needs
     animaux
     champipis
     truc fat
+
     params
     stats
+
+    meilleur évitement obstacles
+
+    si satiety < x alors augmenter score aliment selon remplissage besoin satiety
+    si health < x alors réduire score aliment selon impact besoin health
+
+    si target depuis trop longtemps on en change ?
+
+
+    choses en cours
+    map
+    randomwalk after obstacle
+    needs
 
 */
 
@@ -78,9 +95,27 @@ public class Simulation : MonoBehaviour
     public int NbrObstacles = 10;
     public int NbrObjects = 20;
 
-    public float RatioEmoCogn = 1f; // < 1 : more emotion, > 1 : more cognition
+    public float EmotionalWeight = 1f;
+    public float CognitiveWeight = 1f;
+
+    public int Seed = 4242; // -1 if no seed
 
 
+    Person desirabilityView = null;
+
+    public Person DesirabilityView
+    {
+        get
+        {
+            return desirabilityView;
+        }
+
+        set
+        {
+            if (value == null) Environment.Instance.DisplayStandardMap(); // back to standard map
+            desirabilityView = value;
+        }
+    }
 
     public Simulation()
     {

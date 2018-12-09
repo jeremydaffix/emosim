@@ -104,7 +104,7 @@ public class EmotionalMachine
 
         // besoins
 
-        Needs["health"] = new Need("health", 10f);
+        Needs["health"] = new Need("health", 10f, 0.01f);
         Needs["satiety"] = new Need("satiety", 5f, 0.04f);
 
 
@@ -297,7 +297,9 @@ public class EmotionalMachine
 
     public void AddPossibleAction(GameObject go, int score, PersonAction action)
     {
-        PossibleActions.Add(go, new KeyValuePair<PersonAction, int>(action, score));
+        //if (score < 0) return;
+
+        PossibleActions.Add(go, new KeyValuePair<PersonAction, int>(action, Mathf.RoundToInt(score * Simulation.Instance.EmotionalWeight)));
     }
 
 

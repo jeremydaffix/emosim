@@ -33,7 +33,7 @@ public class Mind
        foreach (KeyValuePair<GameObject, KeyValuePair<PersonAction, int>> pa in person.CognitiveMachine.PossibleActions)
         {
             GameObject target = pa.Key;
-            int cognitiveScore = Mathf.RoundToInt(pa.Value.Value * Simulation.Instance.RatioEmoCogn); // * coef
+            int cognitiveScore = Mathf.RoundToInt(pa.Value.Value);
             PersonAction cognitiveAction = pa.Value.Key;
 
             int mergedScore = cognitiveScore;
@@ -106,6 +106,12 @@ public class Mind
             }
         }
 
+
+        // "desirability map" enabled ?
+        if (Simulation.Instance.DesirabilityView == person)
+        {
+            Environment.Instance.DisplayDesirabilityMap(mergedPossibleActions, bestScore);
+        }
 
         //bestAction(bestTarget);
 

@@ -223,9 +223,11 @@ MonoBehaviour:
   TurnDuration: 5
   FrameCpt: 0
   NbrPersons: 1
-  NbrObstacles: 20
+  NbrObstacles: 15
   NbrObjects: 20
-  RatioEmoCogn: 1
+  EmotionalWeight: 1
+  CognitiveWeight: 1
+  Seed: 4242
 --- !u!1 &908081477
 GameObject:
   m_ObjectHideFlags: 0

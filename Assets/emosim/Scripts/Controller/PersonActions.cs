@@ -82,7 +82,7 @@ public class PersonActions
             walkingDir = new Vector3(xDir, yDir, 0);
 
             // random time
-            cptWalking = Random.Range(1, 5);
+            cptWalking = Random.Range(0, 4);
         }
 
 
@@ -99,7 +99,6 @@ public class PersonActions
 
         Walk();
 
-        
         lr.positionCount = 2;
         lr.SetPosition(0, person.transform.position + (walkingDir / 2f));
         lr.SetPosition(1, target.transform.position);

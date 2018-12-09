@@ -27,6 +27,8 @@ public class Environment : MonoBehaviour
     {
         instance = this;
 
+        if(Simulation.Instance.Seed != -1) Random.InitState(Simulation.Instance.Seed);
+
 
         LoadResources();
         LoadInteractiveObjectModels();
@@ -55,7 +57,7 @@ public class Environment : MonoBehaviour
 
         InteractiveObjects["apple"] = new InteractiveObject("apple", InteractiveObject.TYPE_FOOD, fruitsAtlas[0]);
         InteractiveObjects["apple"].NeedsSatisfied.Add("satiety", 1f);
-        InteractiveObjects["apple"].NeedsSatisfied.Add("health", 1f);
+        InteractiveObjects["apple"].NeedsSatisfied.Add("health", 0.2f);
 
         InteractiveObjects["apple"].TriggerBySight.Add("looksGood");
         InteractiveObjects["apple"].TriggerBySmell.Add("smellsGood");
@@ -68,7 +70,7 @@ public class Environment : MonoBehaviour
 
         InteractiveObjects["carrot"] = new InteractiveObject("carrot", InteractiveObject.TYPE_FOOD, foodAtlas[3]);
         InteractiveObjects["carrot"].NeedsSatisfied.Add("satiety", 1f);
-        InteractiveObjects["carrot"].NeedsSatisfied.Add("health", 2f);
+        InteractiveObjects["carrot"].NeedsSatisfied.Add("health", 0.5f);
 
         InteractiveObjects["carrot"].TriggerBySight.Add("looksBad");
         InteractiveObjects["carrot"].TriggerBySmell.Add("smellsNormal");
@@ -77,7 +79,7 @@ public class Environment : MonoBehaviour
 
         InteractiveObjects["endive"] = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD, fruitsAtlas[8]);
         InteractiveObjects["endive"].NeedsSatisfied.Add("satiety", 2f);
-        InteractiveObjects["endive"].NeedsSatisfied.Add("health", 3f);
+        InteractiveObjects["endive"].NeedsSatisfied.Add("health", 1f);
 
         InteractiveObjects["endive"].TriggerBySight.Add("looksNormal");
         InteractiveObjects["endive"].TriggerBySmell.Add("smellsBad");
@@ -87,7 +89,20 @@ public class Environment : MonoBehaviour
         InteractiveObjects["endive"].TriggerByTaste.Add("closedPosture");
 
 
-        InteractiveObjects["chanterelle"] = new InteractiveObject("chanterelle", InteractiveObject.TYPE_MUSHROOM);
+        InteractiveObjects["burger"] = new InteractiveObject("burger", InteractiveObject.TYPE_FOOD, foodAtlas[0]);
+        InteractiveObjects["burger"].NeedsSatisfied.Add("satiety", 2f);
+        InteractiveObjects["burger"].NeedsSatisfied.Add("health", -1f);
+
+        InteractiveObjects["burger"].TriggerBySight.Add("looksGood");
+        InteractiveObjects["burger"].TriggerBySmell.Add("smellsGood");
+        InteractiveObjects["burger"].TriggerByTaste.Add("tastesGood");
+
+        InteractiveObjects["burger"].TriggerByTaste.Add("pleasureHormones");
+        InteractiveObjects["burger"].TriggerByTaste.Add("smilingFace");
+        InteractiveObjects["burger"].TriggerByTaste.Add("happyPosture");
+
+
+        InteractiveObjects["chanterelle"] = new InteractiveObject("chanterelle", InteractiveObject.TYPE_FOOD);
         InteractiveObjects["chanterelle"].NeedsSatisfied.Add("satiety", 1f);
         InteractiveObjects["chanterelle"].NeedsSatisfied.Add("health", 0f);
 
@@ -96,7 +111,7 @@ public class Environment : MonoBehaviour
         InteractiveObjects["chanterelle"].TriggerByTaste.Add("tastesGood");
 
 
-        InteractiveObjects["amanita"] = new InteractiveObject("amanita", InteractiveObject.TYPE_MUSHROOM);
+        InteractiveObjects["amanita"] = new InteractiveObject("amanita", InteractiveObject.TYPE_FOOD);
         InteractiveObjects["amanita"].NeedsSatisfied.Add("satiety", 1f);
         InteractiveObjects["amanita"].NeedsSatisfied.Add("health", -4f);
 
@@ -124,17 +139,23 @@ public class Environment : MonoBehaviour
 
         for (int i = 0 ; i < Simulation.Instance.NbrPersons ; ++i)
         {
-            CreatePerson();
+            CreateRandomPerson();
         }
+
+        Simulation.Instance.DesirabilityView = persons[0]; ////
 
 
         // interactive objects
 
+        int mod = 4;
+
         for (int i = 0 ; i < Simulation.Instance.NbrObjects ; ++i)
         {
-            if (i % 3 == 0) CreateRandomInteractiveObject("apple");
-            if (i % 3 == 1) CreateRandomInteractiveObject("carrot");
-            if (i % 3 == 2) CreateRandomInteractiveObject("endive");
+
+            if (i % mod == 0) CreateRandomInteractiveObject("apple");
+            if (i % mod == 1) CreateRandomInteractiveObject("carrot");
+            if (i % mod == 2) CreateRandomInteractiveObject("endive");
+            if (i % mod == 3) CreateRandomInteractiveObject("burger");
         }
 
 
@@ -180,9 +201,15 @@ public class Environment : MonoBehaviour
         CreateInteractiveObject(name, RandomCoords());
     }
 
+    public void CreateRandomPerson()
+    {
+        CreatePerson(RandomCoords());
+    }
+
 
     public void RecycleInteractiveObject(InteractiveObjectInstance ioi)
     {
+        ioi.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
         ioi.transform.position = RandomCoords();
     }
 
@@ -215,8 +242,79 @@ public class Environment : MonoBehaviour
             }
         }
 
+        foreach (Person p in Persons)
+        {
+            if (Vector3.Distance(pos, p.transform.position) < 1f)
+            {
+                ret = false;
+                break;
+            }
+        }
+
         return ret;
     }
+
+
+
+    // map with "standard" colors
+    public void DisplayStandardMap()
+    {
+        foreach(InteractiveObjectInstance inst in interactiveObjectInstances)
+        {
+            inst.GetComponent<SpriteRenderer>().color = new Color();
+        }
+    }
+
+
+    // map where the near objects are colored to fit the desirability for a specified person
+    // for that, we use the scores stored in the "possible actions dictionary" created by the mind (emotional + cognitive)
+    public void DisplayDesirabilityMap(Dictionary<GameObject, KeyValuePair<PersonAction, int>> mergedPossibleActions, int bestScore)
+    {
+        Person person = Simulation.Instance.DesirabilityView;
+
+        //Dictionary<InteractiveObjectInstance, int> scores = new Dictionary<InteractiveObjectInstance, int>();
+
+        foreach (KeyValuePair<GameObject, KeyValuePair<PersonAction, int>> pa in mergedPossibleActions)
+        {
+            Color color = new Color(1f, 1f, 1f);
+
+            SpriteRenderer sr = pa.Key.GetComponent<SpriteRenderer>();
+            float score = pa.Value.Value;
+            PersonAction action = pa.Value.Key;
+
+
+            /*score += bestScore;
+            if (score < 0f) score = 0f;
+            else if (score > (2 * bestScore)) score = (2 * bestScore);*/
+
+
+            if(action == person.PersonActions.ActionWalkToTarget || action == person.PersonActions.ActionEat)
+            {
+                //color = new Color(score / 100f, 0.5f, 1f);
+                //color = new Color(1f, 1f, 1f, score / (2 * bestScore) + 0.01f);
+
+                if(score < 0f) // bad score
+                {
+                    if(score > -(bestScore / 2f)) color = new Color(0.2f, 0.2f, 0.5f); // pretty bad
+                    else color = new Color(0.2f, 0.2f, 1.0f); // superbad
+                }
+
+                else // good score
+                {
+                    if (score < (bestScore / 2f)) color = new Color(0.5f, 0.2f, 0.2f); // pretty good
+                    else color = new Color(1.0f, 0.2f, 0.2f); // super good
+                }
+            }
+
+            else if(action == person.PersonActions.ActionFleeTarget)
+            {
+                color = new Color(0.2f, 0.2f, 0.2f);
+            }
+
+            sr.color = color;
+        }
+    }
+
 
 
     public static Environment Instance

@@ -27,9 +27,13 @@ public class Person : MonoBehaviour
 
     PersonActions personActions; // methods to make the agent do something (walk,...)
 
-    GameObject collidingWith = null;
-    int collidingSince = 0;
+
+    // for collisions / obstacles avoidance
+    /*GameObject collidingWith = null;
+    int collidingSince = 0;*/
     int isBlockedSince = 0;
+    Vector3 lastPos;
+    PersonAction lastAction;
 
 
     public float LookRange = 3.0f; // how far we can see things
@@ -77,57 +81,76 @@ public class Person : MonoBehaviour
         {
             int currentTurn = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
 
-
             Vector3 initPos = transform.position;
-
 
             KeyValuePair<PersonAction, GameObject> actionToDo = mind.TakeDecision(); // calc the best action
             actionToDo.Key(actionToDo.Value); // do the action, giving an optional target
 
+            ApplyNeeds();
 
-            // needs
+            CheckIfBlocked(lastPos, lastAction);
+            lastPos = initPos;
+            lastAction = actionToDo.Key;
 
-            foreach (KeyValuePair<string, Need> kvp in EmotionalMachine.Needs)
-            {
-                kvp.Value.CurrentScore -= kvp.Value.DecreaseByTurn;
-
-                Debug.Log(kvp.Key + " => " + kvp.Value.CurrentScore);
-
-                if (kvp.Value.CurrentScore <= 0f) // RIP
-                {
-                    Die(kvp.Value);
-                }
-
-            }
-
-
-            // detects if the agent is blocked in his will to walk towards an object
-
-            if (actionToDo.Key == PersonActions.ActionWalkToTarget)
-            {
-                // physics collision with obstacles is not detected every time
-                // so we check if the agent has moved during the action !
-
-                if ((IsBlockedSince == 0) && ((transform.position - initPos).magnitude < 0.1f))
-                {
-                    IsBlockedSince = Simulation.Instance.FrameCpt;
-                }
-            }
-
-            else
-            {
-                IsBlockedSince = 0;
-            }
+            Debug.Log(lastAction.Method.Name);
         }
     }
 
 
+    void CheckIfBlocked(Vector3 initPos, PersonAction actionToDo)
+    {
+        // detects if the agent is blocked in his will to walk towards an object
+        // we have to check one frame later (that's why we store lastPost and lastAction), because rigidbody.moveposition() doesn't move the object instantly !
+
+        if (actionToDo == PersonActions.ActionWalkToTarget)
+        {
+            // physics collision with obstacles is not detected every time
+            // so we check if the agent has moved during the action !
+
+            if ((IsBlockedSince == 0) && ((transform.position - initPos).magnitude < 0.001f))
+            {
+                IsBlockedSince = Simulation.Instance.FrameCpt;
+            }
+
+            /*else if((transform.position - initPos).magnitude >= 0.01f)
+            {
+                IsBlockedSince = 0;
+            }*/
+        }
+
+        else
+        {
+            IsBlockedSince = 0;
+        }
+    }
+
+
+    void ApplyNeeds()
+    {
+        // needs
+
+        foreach (KeyValuePair<string, Need> kvp in EmotionalMachine.Needs)
+        {
+            kvp.Value.CurrentScore -= kvp.Value.DecreaseByTurn;
+
+            //Debug.Log(kvp.Key + " => " + kvp.Value.CurrentScore);
+
+            if (kvp.Value.CurrentScore <= 0f)
+            {
+                if(kvp.Key.Equals("health")) Die(kvp.Value); // health = 0 : RIP
+                else EmotionalMachine.Needs["health"].CurrentScore -= 0.5f; // satiety or other = 0 : slowly dying
+            }
+
+        }
+    }
 
 
     void Die(Need from)
     {
         //Destroy(gameObject, 3f);
         GetComponent<SpriteRenderer>().sprite = skull;
+        GetComponentInChildren<TextMesh>().text = "";
+        GetComponent<LineRenderer>().enabled = false;
 
         DeadSince = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
 
@@ -142,8 +165,8 @@ public class Person : MonoBehaviour
     {
         //Debug.Log("COLLENTER");
 
-        collidingWith = collision.gameObject;
-        CollidingSince = Simulation.Instance.FrameCpt;
+        //collidingWith = collision.gameObject;
+        //CollidingSince = Simulation.Instance.FrameCpt;
     }
 
 
@@ -152,8 +175,8 @@ public class Person : MonoBehaviour
 
         //Debug.Log("COLLEXIT");
 
-        CollidingWith = null;
-        CollidingSince = 0;
+        //CollidingWith = null;
+        //CollidingSince = 0;
     }
 
 
@@ -316,7 +339,7 @@ public class Person : MonoBehaviour
         }
     }
 
-    public GameObject CollidingWith
+    /*public GameObject CollidingWith
     {
         get
         {
@@ -340,7 +363,7 @@ public class Person : MonoBehaviour
         {
             collidingSince = value;
         }
-    }
+    }*/
 
     public CognitiveMachine CognitiveMachine
     {
