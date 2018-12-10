@@ -31,76 +31,76 @@ public class EmotionalMachine
 
         // perceptions
 
-        perceptions["normalHeartBeat"] = new Perception(person.Heart, 0);
-        perceptions["fastHeartBeat"] = new Perception(person.Heart, 1);
-        perceptions["slowHeartBeat"] = new Perception(person.Heart, 2);
+        Perceptions["normalHeartBeat"] = new Perception(person.Heart, 0);
+        Perceptions["fastHeartBeat"] = new Perception(person.Heart, 1);
+        Perceptions["slowHeartBeat"] = new Perception(person.Heart, 2);
 
-        perceptions["stomachNormal"] = new Perception(person.Stomach, 0);
-        perceptions["stomachAche"] = new Perception(person.Stomach, 1);
-        perceptions["wantToVomit"] = new Perception(person.Stomach, 2);
+        Perceptions["stomachNormal"] = new Perception(person.Stomach, 0);
+        Perceptions["stomachAche"] = new Perception(person.Stomach, 1);
+        Perceptions["wantToVomit"] = new Perception(person.Stomach, 2);
 
-        perceptions["noHormones"] = new Perception(person.Brain, 0);
-        perceptions["painHormones"] = new Perception(person.Brain, 1);
-        perceptions["pleasureHormones"] = new Perception(person.Brain, 2);
-        perceptions["stressHormones"] = new Perception(person.Brain, 3);
-        perceptions["relaxationHormones"] = new Perception(person.Brain, 4);
+        Perceptions["noHormones"] = new Perception(person.Brain, 0);
+        Perceptions["painHormones"] = new Perception(person.Brain, 1);
+        Perceptions["pleasureHormones"] = new Perception(person.Brain, 2);
+        Perceptions["stressHormones"] = new Perception(person.Brain, 3);
+        Perceptions["relaxationHormones"] = new Perception(person.Brain, 4);
 
-        perceptions["pokerFace"] = new Perception(person.Face, 0);
-        perceptions["smilingFace"] = new Perception(person.Face, 1);
-        perceptions["sadFace"] = new Perception(person.Face, 2);
-        perceptions["frightenedFace"] = new Perception(person.Face, 3);
+        Perceptions["pokerFace"] = new Perception(person.Face, 0);
+        Perceptions["smilingFace"] = new Perception(person.Face, 1);
+        Perceptions["sadFace"] = new Perception(person.Face, 2);
+        Perceptions["frightenedFace"] = new Perception(person.Face, 3);
 
-        perceptions["relaxedPosture"] = new Perception(person.Posture, 0);
-        perceptions["closedFists"] = new Perception(person.Posture, 1);
-        perceptions["closedPosture"] = new Perception(person.Posture, 2);
-        perceptions["frightenedPosture"] = new Perception(person.Posture, 3);
-        perceptions["happyPosture"] = new Perception(person.Posture, 4);
-
-
-        perceptions["normalEyes"] = new Perception(person.Eyes, 0);
-        perceptions["inTears"] = new Perception(person.Eyes, 1);
+        Perceptions["relaxedPosture"] = new Perception(person.Posture, 0);
+        Perceptions["closedFists"] = new Perception(person.Posture, 1);
+        Perceptions["closedPosture"] = new Perception(person.Posture, 2);
+        Perceptions["frightenedPosture"] = new Perception(person.Posture, 3);
+        Perceptions["happyPosture"] = new Perception(person.Posture, 4);
 
 
-        perceptions["looksNormal"] = new Perception(person.EyesSensor, 0);
-        perceptions["looksGood"] = new Perception(person.EyesSensor, 1);
-        perceptions["looksBad"] = new Perception(person.EyesSensor, 2);
-        perceptions["looksTerrifying"] = new Perception(person.EyesSensor, 3);
+        Perceptions["normalEyes"] = new Perception(person.Eyes, 0);
+        Perceptions["inTears"] = new Perception(person.Eyes, 1);
 
-        perceptions["smellsNormal"] = new Perception(person.NoseSensor, 0);
-        perceptions["smellsGood"] = new Perception(person.NoseSensor, 1);
-        perceptions["smellsBad"] = new Perception(person.NoseSensor, 2);
 
-        perceptions["tastesNormal"] = new Perception(person.PalateSensor, 0);
-        perceptions["tastesGood"] = new Perception(person.PalateSensor, 1);
-        perceptions["tastesBad"] = new Perception(person.PalateSensor, 2);
+        Perceptions["looksNormal"] = new Perception(person.EyesSensor, 0);
+        Perceptions["looksGood"] = new Perception(person.EyesSensor, 1);
+        Perceptions["looksBad"] = new Perception(person.EyesSensor, 2);
+        Perceptions["looksTerrifying"] = new Perception(person.EyesSensor, 3);
+
+        Perceptions["smellsNormal"] = new Perception(person.NoseSensor, 0);
+        Perceptions["smellsGood"] = new Perception(person.NoseSensor, 1);
+        Perceptions["smellsBad"] = new Perception(person.NoseSensor, 2);
+
+        Perceptions["tastesNormal"] = new Perception(person.PalateSensor, 0);
+        Perceptions["tastesGood"] = new Perception(person.PalateSensor, 1);
+        Perceptions["tastesBad"] = new Perception(person.PalateSensor, 2);
 
 
 
         // emotions
 
         emotions["fear"] = new Emotion("fear", -3);
-        emotions["fear"].AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["stressHormones"]).AddPerception(perceptions["frightenedFace"]).AddPerception(perceptions["frightenedPosture"]).AddPerception(perceptions["looksTerrifying"]);
+        emotions["fear"].AddPerception(Perceptions["fastHeartBeat"]).AddPerception(Perceptions["stomachAche"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["stressHormones"]).AddPerception(Perceptions["frightenedFace"]).AddPerception(Perceptions["frightenedPosture"]).AddPerception(Perceptions["looksTerrifying"]);
 
         emotions["pleasure"] = new Emotion("pleasure", 2);
-        emotions["pleasure"].AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["pleasureHormones"]).AddPerception(perceptions["smilingFace"]).AddPerception(perceptions["happyPosture"]).AddPerception(perceptions["looksGood"]).AddPerception(perceptions["tastesGood"]).AddPerception(perceptions["smellsGood"]);
+        emotions["pleasure"].AddPerception(Perceptions["fastHeartBeat"]).AddPerception(Perceptions["stomachNormal"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["pleasureHormones"]).AddPerception(Perceptions["smilingFace"]).AddPerception(Perceptions["happyPosture"]).AddPerception(Perceptions["looksGood"]).AddPerception(Perceptions["tastesGood"]).AddPerception(Perceptions["smellsGood"]);
 
         emotions["pain"] = new Emotion("pain", -1);
-        emotions["pain"].AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["inTears"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedFists"]);
+        emotions["pain"].AddPerception(Perceptions["fastHeartBeat"]).AddPerception(Perceptions["stomachNormal"]).AddPerception(Perceptions["inTears"]).AddPerception(Perceptions["painHormones"]).AddPerception(Perceptions["sadFace"]).AddPerception(Perceptions["closedFists"]);
 
         emotions["sadness"] = new Emotion("sadness", -1);
-        emotions["sadness"].AddPerception(perceptions["slowHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["inTears"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]).AddPerception(perceptions["smellsBad"]).AddPerception(perceptions["looksBad"]).AddPerception(perceptions["tastesBad"]);
+        emotions["sadness"].AddPerception(Perceptions["slowHeartBeat"]).AddPerception(Perceptions["stomachAche"]).AddPerception(Perceptions["inTears"]).AddPerception(Perceptions["painHormones"]).AddPerception(Perceptions["sadFace"]).AddPerception(Perceptions["closedPosture"]).AddPerception(Perceptions["smellsBad"]).AddPerception(Perceptions["looksBad"]).AddPerception(Perceptions["tastesBad"]);
 
         emotions["stress"] = new Emotion("stress", -1);
-        emotions["stress"].AddPerception(perceptions["fastHeartBeat"]).AddPerception(perceptions["stomachAche"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["stressHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]);
+        emotions["stress"].AddPerception(Perceptions["fastHeartBeat"]).AddPerception(Perceptions["stomachAche"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["stressHormones"]).AddPerception(Perceptions["sadFace"]).AddPerception(Perceptions["closedPosture"]);
 
         emotions["relaxation"] = new Emotion("relaxation", 1);
-        emotions["relaxation"].AddPerception(perceptions["slowHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["relaxationHormones"]).AddPerception(perceptions["smilingFace"]).AddPerception(perceptions["relaxedPosture"]);
+        emotions["relaxation"].AddPerception(Perceptions["slowHeartBeat"]).AddPerception(Perceptions["stomachNormal"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["relaxationHormones"]).AddPerception(Perceptions["smilingFace"]).AddPerception(Perceptions["relaxedPosture"]);
 
         emotions["sickness"] = new Emotion("sickness", -2);
-        emotions["sickness"].AddPerception(perceptions["normalHeartBeat"]).AddPerception(perceptions["wantToVomit"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["painHormones"]).AddPerception(perceptions["sadFace"]).AddPerception(perceptions["closedPosture"]);
+        emotions["sickness"].AddPerception(Perceptions["normalHeartBeat"]).AddPerception(Perceptions["wantToVomit"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["painHormones"]).AddPerception(Perceptions["sadFace"]).AddPerception(Perceptions["closedPosture"]);
 
         emotions["neutral"] = new Emotion("neutral", 0);
-        emotions["neutral"].AddPerception(perceptions["normalHeartBeat"]).AddPerception(perceptions["stomachNormal"]).AddPerception(perceptions["normalEyes"]).AddPerception(perceptions["noHormones"]).AddPerception(perceptions["pokerFace"]).AddPerception(perceptions["relaxedPosture"]);
+        emotions["neutral"].AddPerception(Perceptions["normalHeartBeat"]).AddPerception(Perceptions["stomachNormal"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["noHormones"]).AddPerception(Perceptions["pokerFace"]).AddPerception(Perceptions["relaxedPosture"]);
 
 
 
@@ -116,8 +116,8 @@ public class EmotionalMachine
         if (Simulation.Instance.InnateEnabled)
         {
             SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, Environment.Instance.InteractiveObjects["amanita"]));
-            amanitaSM.Perceptions.Add(perceptions["wantToVomit"]);
-            amanitaSM.Perceptions.Add(perceptions["painHormones"]);
+            amanitaSM.Perceptions.Add(Perceptions["wantToVomit"]);
+            amanitaSM.Perceptions.Add(Perceptions["painHormones"]);
             SomaticMemory.Add(amanitaSM);
         }
 
@@ -182,9 +182,9 @@ public class EmotionalMachine
     {
         foreach(string s in obj.TriggerBySight)
         {
-            if(perceptions.ContainsKey(s))
+            if(Perceptions.ContainsKey(s))
             {
-                Perception p = perceptions[s];
+                Perception p = Perceptions[s];
                 
                 p.Organ.State = p.State;
             }
@@ -196,9 +196,9 @@ public class EmotionalMachine
     {
         foreach (string s in obj.TriggerBySmell)
         {
-            if (perceptions.ContainsKey(s))
+            if (Perceptions.ContainsKey(s))
             {
-                Perception p = perceptions[s];
+                Perception p = Perceptions[s];
 
                 p.Organ.State = p.State;
             }
@@ -212,9 +212,9 @@ public class EmotionalMachine
         {
             foreach (string s in obj.TriggerByTaste)
             {
-                if (perceptions.ContainsKey(s))
+                if (Perceptions.ContainsKey(s))
                 {
-                    Perception p = perceptions[s];
+                    Perception p = Perceptions[s];
 
                     p.Organ.State = p.State;
                 }
@@ -417,6 +417,19 @@ public class EmotionalMachine
         set
         {
             lastEmotions = value;
+        }
+    }
+
+    public Dictionary<string, Perception> Perceptions
+    {
+        get
+        {
+            return perceptions;
+        }
+
+        set
+        {
+            perceptions = value;
         }
     }
 

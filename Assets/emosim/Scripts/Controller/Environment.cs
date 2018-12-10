@@ -250,8 +250,9 @@ public class Environment : MonoBehaviour
         if (i.InteractiveObject.Type == InteractiveObject.TYPE_OBSTACLE || i.InteractiveObject.Type == InteractiveObject.TYPE_ANIMAL)
         {
             i.GetComponent<BoxCollider2D>().enabled = true;
+            i.GetComponent<BoxCollider2D>().isTrigger = false;
 
-            if(i.InteractiveObject.Type == InteractiveObject.TYPE_ANIMAL)
+            if (i.InteractiveObject.Type == InteractiveObject.TYPE_ANIMAL)
             {
                 i.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
             }
@@ -326,7 +327,7 @@ public class Environment : MonoBehaviour
     {
         foreach(InteractiveObjectInstance inst in interactiveObjectInstances)
         {
-            inst.GetComponent<SpriteRenderer>().color = new Color();
+            inst.GetComponent<SpriteRenderer>().color = new Color(1,1,1);
         }
     }
 

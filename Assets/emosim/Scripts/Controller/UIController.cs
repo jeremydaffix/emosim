@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class UIController : MonoBehaviour {
 
@@ -16,19 +18,60 @@ public class UIController : MonoBehaviour {
     public Text SpeedLabel;
     public GameObject PlayButton, PauseButton;
 
+    public TextMeshProUGUI PersonTMP, ObjectTMP;
 
 
-	// Use this for initialization
-	void Start () {
+    public static UIController Instance;
+
+
+    Person displayedPerson = null;
+    InteractiveObjectInstance displayedObject = null;
+
+    public InteractiveObjectInstance DisplayedObject
+    {
+        get
+        {
+            return displayedObject;
+        }
+
+        set
+        {
+            displayedObject = value;
+        }
+    }
+
+    public Person DisplayedPerson
+    {
+        get
+        {
+            return displayedPerson;
+        }
+
+        set
+        {
+            displayedPerson = value;
+        }
+    }
+
+
+
+    // Use this for initialization
+    void Start () {
+
+        Instance = this;
 
         CanvasPlay.gameObject.SetActive(false);
+        CanvasPerson.gameObject.SetActive(false);
+        CanvasObject.gameObject.SetActive(false);
 
         RefreshParamsValues();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+
+        DisplayPerson();
+        DisplayObject();
 	}
 
 
@@ -64,6 +107,8 @@ public class UIController : MonoBehaviour {
 
         CanvasNewSimu.gameObject.SetActive(false);
         CanvasPlay.gameObject.SetActive(true);
+        CanvasPerson.gameObject.SetActive(false);
+        CanvasObject.gameObject.SetActive(false);
 
         Simulation.Instance.Playing = true;
         RefreshPlayValues();
@@ -102,7 +147,113 @@ public class UIController : MonoBehaviour {
 
         CanvasNewSimu.gameObject.SetActive(true);
         CanvasPlay.gameObject.SetActive(false);
+        CanvasPerson.gameObject.SetActive(false);
+        CanvasObject.gameObject.SetActive(false);
 
         RefreshParamsValues();
+    }
+
+
+    public void DisplayPerson()
+    {
+        if (DisplayedPerson != null)
+        {
+            CanvasPerson.gameObject.SetActive(true);
+
+            // map
+            // needs
+            // emotions
+            // perceptions
+            // nbr SM
+
+            string txt = "";
+
+            txt += "<b>Somatic Memory: </b>\n  " + DisplayedPerson.EmotionalMachine.SomaticMemory.Count + " markers\n";
+
+            txt += "<b>Needs ( / 10): </b>\n";
+            foreach(KeyValuePair<string, Need> kvp in DisplayedPerson.CognitiveMachine.Needs)
+            {
+                txt += "  " + kvp.Key + " = " + kvp.Value.CurrentScore.ToString("0.0") + "\n";
+            }
+
+            txt += "<b>Main Emotions: </b>\n  " + DisplayedPerson.EmotionalMachine.LastEmotions.ElementAt(0).Key.Name + " (" + DisplayedPerson.EmotionalMachine.LastEmotions.ElementAt(0).Value + ")\n";
+            if (DisplayedPerson.EmotionalMachine.LastEmotions.Count > 1) txt += "  " + DisplayedPerson.EmotionalMachine.LastEmotions.ElementAt(1).Key.Name + " (" + DisplayedPerson.EmotionalMachine.LastEmotions.ElementAt(1).Value + ")\n";
+            if (DisplayedPerson.EmotionalMachine.LastEmotions.Count > 2) txt += "  " + DisplayedPerson.EmotionalMachine.LastEmotions.ElementAt(2).Key.Name + " (" + DisplayedPerson.EmotionalMachine.LastEmotions.ElementAt(2).Value + ")\n";
+
+
+            txt += "<b>Perceptions: </b>\n";
+            foreach (KeyValuePair<string, Perception> kvp in DisplayedPerson.EmotionalMachine.Perceptions)
+            {
+                if (kvp.Value.Organ.State == kvp.Value.State) // if the organ is in the current perception's state
+                {
+                    txt += "  " + kvp.Value.Organ.Name + " = " + kvp.Key + "\n";
+                }
+            }
+
+
+            PersonTMP.text = txt;
+        }
+
+        else
+        {
+            CanvasPerson.gameObject.SetActive(false);
+        }
+    }
+
+    public void DisplayObject()
+    {
+        if (DisplayedObject != null)
+        {
+            CanvasObject.gameObject.SetActive(true);
+
+            string txt = "";
+
+            txt += "<b>Name: </b>\n";
+            txt += "  " + DisplayedObject.InteractiveObjectName + "\n";
+
+            txt += "<b>Needs Satisfied: </b>\n";
+            foreach (KeyValuePair<string, float> kvp in DisplayedObject.InteractiveObject.NeedsSatisfied)
+            {
+                txt += "  " + kvp.Key + " -> " + kvp.Value.ToString("0.0") + "\n";
+            }
+
+            txt += "<b>Sight: </b>\n";
+            foreach (string trigger in DisplayedObject.InteractiveObject.TriggerBySight)
+            {
+                txt += "  " + trigger + "\n";
+            }
+
+            txt += "<b>Smell: </b>\n";
+            foreach (string trigger in DisplayedObject.InteractiveObject.TriggerBySmell)
+            {
+                txt += "  " + trigger + "\n";
+            }
+
+            txt += "<b>Taste: </b>\n";
+            foreach (string trigger in DisplayedObject.InteractiveObject.TriggerByTaste)
+            {
+                txt += "  " + trigger + "\n";
+            }
+
+            ObjectTMP.text = txt;
+        }
+
+        else
+        {
+            CanvasObject.gameObject.SetActive(false);
+        }
+    }
+
+
+    public void ClosePerson()
+    {
+        Environment.Instance.DisplayStandardMap();
+        DisplayedPerson = null;
+        Simulation.Instance.DesirabilityView = null;
+    }
+
+    public void CloseObject()
+    {
+        DisplayedObject = null;
     }
 }

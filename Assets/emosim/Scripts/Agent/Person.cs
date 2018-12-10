@@ -181,6 +181,17 @@ public class Person : MonoBehaviour
     }
 
 
+    private void OnMouseDown()
+    {
+        //Debug.Log("CLICK PERSON");
+
+        Environment.Instance.DisplayStandardMap();
+        Simulation.Instance.DesirabilityView = this;
+        UIController.Instance.DisplayedPerson = this;
+        UIController.Instance.DisplayedObject = null;
+    }
+
+
 
 
 

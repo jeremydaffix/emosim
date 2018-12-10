@@ -65,8 +65,7 @@ using System.Collections;
     pb needs
     empathie / apprentissage autrui
 
-    contrôles simu
-    params
+    display person / object
     stats
 
     équilibrer
@@ -74,6 +73,9 @@ using System.Collections;
 
     slides
     uml
+    comments
+
+    gros bug distances
 
     
 

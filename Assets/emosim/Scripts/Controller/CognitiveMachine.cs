@@ -72,7 +72,7 @@ public class CognitiveMachine
                         if (kvp.Value.CurrentScore < 5f /*&& sat > 0f*/) // need trigger!
                         {
                             score += Mathf.RoundToInt(sat * sat * sat * 10f); // the most the need is satisfied by the object, bigger the score
-                            Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
+                            //Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
                         }
                     }
 
@@ -80,7 +80,7 @@ public class CognitiveMachine
 
                     // weight with distance
 
-                   /* float dist = Vector3.Distance(person.transform.position, go.transform.position);
+                    float dist = Vector3.Distance(person.transform.position, go.transform.position);
                     score += (-1 * (int)dist);
 
 
@@ -89,7 +89,7 @@ public class CognitiveMachine
                         AddPossibleAction(go, 1, person.PersonActions.ActionEat);
 
                     else
-                        AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);*/
+                        AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);
 
                     //Debug.Log(score);
                     // distance + needs + knowledge + pathfinding

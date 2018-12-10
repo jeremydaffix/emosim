@@ -115,6 +115,13 @@ public class InteractiveObjectInstance : MonoBehaviour
 
 
 
+    private void OnMouseDown()
+    {
+        UIController.Instance.DisplayedObject = this;
+        UIController.Instance.DisplayedPerson = null;
+    }
+
+
 
 
 
