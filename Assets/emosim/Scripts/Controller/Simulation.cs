@@ -100,6 +100,8 @@ public class Simulation : MonoBehaviour
 
     public bool InnateEnabled = true;
 
+    public bool Playing = false;
+
 
     Person desirabilityView = null;
 
@@ -139,6 +141,6 @@ public class Simulation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ++FrameCpt;
+        if(Playing) ++FrameCpt;
     }
 }

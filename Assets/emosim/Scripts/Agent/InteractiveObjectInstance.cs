@@ -35,7 +35,7 @@ public class InteractiveObjectInstance : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Simulation.Instance.FrameCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
+        if (Simulation.Instance.Playing && Simulation.Instance.FrameCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
         {
             int currentTurn = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
 

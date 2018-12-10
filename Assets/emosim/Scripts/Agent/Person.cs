@@ -78,7 +78,7 @@ public class Person : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(DeadSince == -1 && Simulation.Instance.FrameCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
+        if(Simulation.Instance.Playing && DeadSince == -1 && Simulation.Instance.FrameCpt % Simulation.Instance.TurnDuration == 0) // 1 turn
         {
             int currentTurn = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
 

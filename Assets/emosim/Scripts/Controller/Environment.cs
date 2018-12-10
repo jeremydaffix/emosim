@@ -27,13 +27,13 @@ public class Environment : MonoBehaviour
     {
         instance = this;
 
-        if(Simulation.Instance.Seed != -1) Random.InitState(Simulation.Instance.Seed);
+        //if(Simulation.Instance.Seed != -1) Random.InitState(Simulation.Instance.Seed);
 
 
         LoadResources();
         LoadInteractiveObjectModels();
 
-        CreateEnvironment();
+        //CreateEnvironment();
 
 
     }
@@ -160,6 +160,7 @@ public class Environment : MonoBehaviour
 
     public void CreateEnvironment()
     {
+        if (Simulation.Instance.Seed != -1) Random.InitState(Simulation.Instance.Seed);
 
         // persons
 
@@ -168,7 +169,7 @@ public class Environment : MonoBehaviour
             CreateRandomPerson();
         }
 
-        Simulation.Instance.DesirabilityView = persons[0]; ////
+        //Simulation.Instance.DesirabilityView = persons[0]; ////
 
 
         // interactive objects
@@ -208,6 +209,22 @@ public class Environment : MonoBehaviour
 
     }
 
+
+    public void DestroyEnvironment()
+    {
+        foreach(Person p in persons)
+        {
+            Destroy(p.gameObject);
+        }
+
+        foreach (InteractiveObjectInstance ioi in InteractiveObjectInstances)
+        {
+            Destroy(ioi.gameObject);
+        }
+
+        persons = new List<Person>();
+        interactiveObjectInstances = new List<InteractiveObjectInstance>();
+    }
 
 
 
