@@ -72,6 +72,9 @@ using System.Collections;
     équilibrer
     voir si les scénarios marchent
 
+    slides
+    uml
+
     
 
 */
