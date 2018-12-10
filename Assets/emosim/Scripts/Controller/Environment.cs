@@ -2,22 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+// this class contains the environment of the simulation
+// persons, interactive objects instances, interactive objects models, graphical resources,...
 public class Environment : MonoBehaviour
 {
     static Environment instance = null; // singleton
 
 
-    private Dictionary<string, InteractiveObject> interactiveObjects = new Dictionary<string, InteractiveObject>();
+    private Dictionary<string, InteractiveObject> interactiveObjects = new Dictionary<string, InteractiveObject>(); // all models of interactive objects
 
-    public GameObject personPrefab, interactiveObjectPrefab;
+    public GameObject personPrefab, interactiveObjectPrefab; // prefabs
 
-    public int borderX = 9;
-    public int borderY = 4;
+    public int borderX = 9; // width = borderX * 2
+    public int borderY = 4; // height = borderY * 2
 
-    List<Person> persons = new List<Person>();
-    List<InteractiveObjectInstance> interactiveObjectInstances = new List<InteractiveObjectInstance>();
+    List<Person> persons = new List<Person>(); // all persons
+    List<InteractiveObjectInstance> interactiveObjectInstances = new List<InteractiveObjectInstance>(); // all interactive object instances
 
 
+    // sprites
     Sprite[] fruitsAtlas, foodAtlas;
     Sprite tree, skull, snake, amanita;
 
@@ -27,15 +31,11 @@ public class Environment : MonoBehaviour
     {
         instance = this;
 
-        //if(Simulation.Instance.Seed != -1) Random.InitState(Simulation.Instance.Seed);
-
 
         LoadResources();
         LoadInteractiveObjectModels();
 
         //CreateEnvironment();
-
-
     }
 
 
@@ -158,6 +158,7 @@ public class Environment : MonoBehaviour
 
 
 
+    // create the environment, using configuration from Simulation class
     public void CreateEnvironment()
     {
         if (Simulation.Instance.Seed != -1) Random.InitState(Simulation.Instance.Seed);
@@ -210,6 +211,7 @@ public class Environment : MonoBehaviour
     }
 
 
+    // destroy the environment, persons, objects,... (so we can launch an other simulation !)
     public void DestroyEnvironment()
     {
         foreach(Person p in persons)
@@ -228,6 +230,7 @@ public class Environment : MonoBehaviour
 
 
 
+    // create a person at a position
     public void CreatePerson(Vector3 pos = new Vector3())
     {
         GameObject obj = Instantiate(personPrefab, new Vector3(), new Quaternion());
@@ -237,6 +240,7 @@ public class Environment : MonoBehaviour
 
     }
 
+    // create an interactive object (giving its name / identifier), at a position
     public void CreateInteractiveObject(string name, Vector3 pos = new Vector3())
     {
         GameObject obj = Instantiate(interactiveObjectPrefab, pos, new Quaternion());
@@ -262,17 +266,20 @@ public class Environment : MonoBehaviour
     }
 
 
+    // create an interactive object at a random position
     public void CreateRandomInteractiveObject(string name)
     {
         CreateInteractiveObject(name, RandomCoords());
     }
 
+    // create a person at a random position
     public void CreateRandomPerson()
     {
         CreatePerson(RandomCoords());
     }
 
 
+    // move an interactive object an other (random) position
     public void RecycleInteractiveObject(InteractiveObjectInstance ioi)
     {
         ioi.gameObject.GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
@@ -280,6 +287,7 @@ public class Environment : MonoBehaviour
     }
 
 
+    // generate random coordinates
     Vector3 RandomCoords()
     {
         int x, y;
@@ -289,12 +297,14 @@ public class Environment : MonoBehaviour
             x = Random.Range(-borderX, borderX);
             y = Random.Range(-borderY, borderY);
 
-        } while (!IsPlaceFree(new Vector3(x, y, 0)));
+        } while (!IsPlaceFree(new Vector3(x, y, 0))); // is the place free ?
          
 
         return new Vector3(x, y, 0);
     }
 
+
+    // check if an object or a person isn't already here
     bool IsPlaceFree(Vector3 pos)
     {
         bool ret = true;
@@ -338,7 +348,6 @@ public class Environment : MonoBehaviour
     {
         Person person = Simulation.Instance.DesirabilityView;
 
-        //Dictionary<InteractiveObjectInstance, int> scores = new Dictionary<InteractiveObjectInstance, int>();
 
         foreach (KeyValuePair<GameObject, KeyValuePair<PersonAction, int>> pa in mergedPossibleActions)
         {
@@ -348,17 +357,10 @@ public class Environment : MonoBehaviour
             float score = pa.Value.Value;
             PersonAction action = pa.Value.Key;
 
-
-            /*score += bestScore;
-            if (score < 0f) score = 0f;
-            else if (score > (2 * bestScore)) score = (2 * bestScore);*/
-
+           
 
             if(action == person.PersonActions.ActionWalkToTarget || action == person.PersonActions.ActionEat)
             {
-                //color = new Color(score / 100f, 0.5f, 1f);
-                //color = new Color(1f, 1f, 1f, score / (2 * bestScore) + 0.01f);
-
                 if(score < 0f) // bad score
                 {
                     if(score > -(bestScore / 2f)) color = new Color(0.2f, 0.2f, 0.5f); // pretty bad
@@ -380,6 +382,8 @@ public class Environment : MonoBehaviour
             sr.color = color;
         }
     }
+
+
 
 
 

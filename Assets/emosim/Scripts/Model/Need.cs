@@ -6,8 +6,8 @@ using System.Collections;
 public class Need
 {
     string name;
-    float currentScore;
-    float decreaseByTurn;
+    float currentScore; // score / 10
+    float decreaseByTurn; // how much we decrease the satisfaction (score) of this need each turn
 
     public Need(string _name, float _currentScore = 5, float _decreaseByTurn = 0f)
     {

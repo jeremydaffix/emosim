@@ -3,21 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+// this class is the emotional part of the mind
+// it handles things like perceptions, emotions, somatic markers, target choice according to
+// emotional considerations, fleeing a dangerous thing,...
 public class EmotionalMachine
 {
 
     Person person;
 
-    List<SomaticMarker> somaticMemory = new List<SomaticMarker>();
+    List<SomaticMarker> somaticMemory = new List<SomaticMarker>(); // list of all somatic markers (memory of an object -> set of physical perceptions)
 
-    Dictionary<string, Perception> perceptions = new Dictionary<string, Perception>();
-    Dictionary<string, Emotion> emotions = new Dictionary<string, Emotion>();
-    //Dictionary<string, Need> needs = new Dictionary<string, Need>();
+    Dictionary<string, Perception> perceptions = new Dictionary<string, Perception>(); // all types of perceptions (stomach ach, fast or slow heart beat, pain hormones,...)
+    Dictionary<string, Emotion> emotions = new Dictionary<string, Emotion>(); // definitions of emotions
 
-    Dictionary<Emotion, int> lastEmotions = new Dictionary<Emotion, int>();
+    Dictionary<Emotion, int> lastEmotions = new Dictionary<Emotion, int>(); // last emotions calculated
 
 
-     Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>();
+     Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>(); // possible actions (returned to mind)
 
 
     public void Create(Person p)
@@ -25,11 +27,12 @@ public class EmotionalMachine
         person = p;
 
 
-        // création des différents éléments (individus, émotions,...)
+        // création des différents éléments (perceptions, émotions,...)
         // + tard : chargement dans des fichiers de config !
 
 
         // perceptions
+        // a perception = an organ, in a given state!
 
         Perceptions["normalHeartBeat"] = new Perception(person.Heart, 0);
         Perceptions["fastHeartBeat"] = new Perception(person.Heart, 1);
@@ -77,6 +80,7 @@ public class EmotionalMachine
 
 
         // emotions
+        // an emotion = a set of perceptions
 
         emotions["fear"] = new Emotion("fear", -3);
         emotions["fear"].AddPerception(Perceptions["fastHeartBeat"]).AddPerception(Perceptions["stomachAche"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["stressHormones"]).AddPerception(Perceptions["frightenedFace"]).AddPerception(Perceptions["frightenedPosture"]).AddPerception(Perceptions["looksTerrifying"]);
@@ -102,19 +106,14 @@ public class EmotionalMachine
         emotions["neutral"] = new Emotion("neutral", 0);
         emotions["neutral"].AddPerception(Perceptions["normalHeartBeat"]).AddPerception(Perceptions["stomachNormal"]).AddPerception(Perceptions["normalEyes"]).AddPerception(Perceptions["noHormones"]).AddPerception(Perceptions["pokerFace"]).AddPerception(Perceptions["relaxedPosture"]);
 
+        
 
 
-        // besoins
-
-        //Needs["health"] = new Need("health", 10f, 0.01f);
-        //Needs["satiety"] = new Need("satiety", 5f, 0.04f);
-
-
-
-        // marqueurs somatiques innés
+        // innate somatic markers
 
         if (Simulation.Instance.InnateEnabled)
         {
+            // example : an amanita is beautiful, but POISONOUS
             SomaticMarker amanitaSM = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, Environment.Instance.InteractiveObjects["amanita"]));
             amanitaSM.Perceptions.Add(Perceptions["wantToVomit"]);
             amanitaSM.Perceptions.Add(Perceptions["painHormones"]);
@@ -126,6 +125,7 @@ public class EmotionalMachine
     }
 
 
+    // calculate a "global mood", according to the emotions we are currently feeling
     public int CalcMood()
     {
         Dictionary<Emotion, int> em = CalcEmotions();
@@ -134,7 +134,7 @@ public class EmotionalMachine
 
         int score = 0;
 
-        foreach(KeyValuePair<Emotion, int> kvp in em)
+        foreach(KeyValuePair<Emotion, int> kvp in em) // for each emotion calculated
         {
             if (kvp.Value >= (em.Values.Max() / 3f))
             {
@@ -151,6 +151,8 @@ public class EmotionalMachine
         return score;
     }
 
+
+    // calculates the "most likely" emotions, according to the states of each organs (= physical perceptions)
     public Dictionary<Emotion, int> CalcEmotions()
     {
         Dictionary<Emotion, int> em = new Dictionary<Emotion, int>();
@@ -172,12 +174,15 @@ public class EmotionalMachine
             em[e] = score;
         }
 
+        // order the list (best score = most likely first)
         em = em.OrderByDescending(u => u.Value).ToDictionary(z => z.Key, y => y.Value);
 
         return em;
     }
 
 
+
+    // trigger the perceptions by seeing an object
     public void SeeObject(InteractiveObject obj)
     {
         foreach(string s in obj.TriggerBySight)
@@ -191,7 +196,7 @@ public class EmotionalMachine
         }
     }
 
-
+    // trigger the perceptions by smelling an object
     public void SmellObject(InteractiveObject obj)
     {
         foreach (string s in obj.TriggerBySmell)
@@ -205,7 +210,7 @@ public class EmotionalMachine
         }
     }
 
-
+    // trigger the perceptions by tasting / eating an object
     public void TasteObject(InteractiveObject obj)
     {
         if (Simulation.Instance.InnateEnabled)
@@ -223,6 +228,7 @@ public class EmotionalMachine
     }
 
 
+    // trigger the perceptions by remembering (somatic memory) an object
     public void RememberObject(InteractiveObject obj)
     {
         // note : a same object can have multiple entries in the memory !!!
@@ -236,13 +242,15 @@ public class EmotionalMachine
                     p.Organ.State = p.State;
                 }
             }
-
-            // needs ??
+            
         }
     }
 
 
 
+    // trigger different perceptions (smelling, seeing, remembering)
+    // because we are near an object
+    // this will be used to calculate emotions
     public void TestObject(InteractiveObject obj)
     {
         person.EmotionalMachine.ResetPerceptions();
@@ -254,13 +262,10 @@ public class EmotionalMachine
         }
 
         person.EmotionalMachine.RememberObject(obj);
-
-        //person.EmotionalMachine.EatObject(obj);
-
-        //person.EmotionalMachine.CalcMood();
     }
 
 
+    // reset all perceptions
     public void ResetPerceptions()
     {
         person.Brain.State = 0;
@@ -277,6 +282,8 @@ public class EmotionalMachine
 
 
 
+
+    // save the memory of a given (model of) interactive object
     public void SaveInSomaticMemory(InteractiveObject io)
     {
         SomaticMarker sm = new SomaticMarker(new MentalImage(MentalImage.TYPE_OBJECT, io), 3);
@@ -305,16 +312,17 @@ public class EmotionalMachine
     }
 
 
+    // calculate all possible actions and return the list for the mind
     public void CalcEmotionalActions()
     {
 
-        List<GameObject> canSee = person.PersonActions.LookForThings();
+        List<GameObject> canSee = person.PersonActions.LookForThings(); // what can we see?
 
 
         PossibleActions.Clear();
 
 
-        foreach (GameObject go in canSee)
+        foreach (GameObject go in canSee) // for each object we can see
         {
             InteractiveObjectInstance ioi = go.GetComponent<InteractiveObjectInstance>();
             Person p = go.GetComponent<Person>();
@@ -329,21 +337,23 @@ public class EmotionalMachine
 
                 else
                 {
-                    person.EmotionalMachine.TestObject(ioi.InteractiveObject);
+                    person.EmotionalMachine.TestObject(ioi.InteractiveObject); // "look at" and "smell" the object, activate perceptions
 
-                    int score = person.EmotionalMachine.CalcMood();
+                    int score = person.EmotionalMachine.CalcMood(); // according to the triggered perceptions : does this object make me feel good? calculate a score
 
+                    // fear : flee action
                     if (lastEmotions.ElementAt(0).Key == emotions["fear"] && Vector3.Distance(person.transform.position, go.transform.position) <= (person.LookRange / 1.8f))
                     {
-                        //Debug.Log("FEAR");
                         AddPossibleAction(go, Mathf.RoundToInt(20f * Simulation.Instance.EmotionalWeight), person.PersonActions.ActionFleeTarget);
                     }
 
+                    // we are close enough to eat the object
                     else if (Vector3.Distance(person.transform.position, go.transform.position) <= 1f)
                     {
                         AddPossibleAction(go, score, person.PersonActions.ActionEat);
                     }
 
+                    // walk towards the object action
                     else
                     {
                         AddPossibleAction(go, score, person.PersonActions.ActionWalkToTarget);
@@ -358,10 +368,7 @@ public class EmotionalMachine
             }
         }
 
-
-        //AddPossibleAction(person.gameObject, 0, person.PersonActions.ActionRandomWalk);
-
-
+        
     }
 
 
@@ -432,17 +439,5 @@ public class EmotionalMachine
             perceptions = value;
         }
     }
-
-    /*public Dictionary<string, Need> Needs
-    {
-        get
-        {
-            return needs;
-        }
-
-        set
-        {
-            needs = value;
-        }
-    }*/
+    
 }

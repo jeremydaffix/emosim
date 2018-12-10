@@ -3,11 +3,11 @@ using System.Collections;
 
 /*
  
-    Emo, Cogn (needs?)
+    Emo, Cogn
     
 
     Pas de cogn :
-    - ne mange que les saloperies
+    - ne mange que les objets attirants, sans considération pour sa santé et ses besoins
     - ne se fie qu'à son intuition 1ère (odeur, vision)
     - si coincé dans un coin sans trucs bons, ne mangent rien
     - trop d'empathie envers animaux mignons
@@ -19,7 +19,7 @@ using System.Collections;
     - pas d'idée sur les éléments non connus
     - trop lent
     - pas de peur
-    - flemme objets loin (à compenser de toute manière avec cogn needs urgents)
+    - flemme objets loin et / ou pas bons
 
 
     Emo = choix target, décision de fuite
@@ -54,18 +54,13 @@ using System.Collections;
 
 
 
-    
-    si satiety < x alors augmenter score aliment selon remplissage besoin satiety
-    si health < x alors réduire score aliment selon impact besoin health
-
-
-
     TODO
 
     pb needs
     empathie / apprentissage autrui
+    gros bug distances
 
-    display person / object
+
     stats
 
     équilibrer
@@ -75,13 +70,13 @@ using System.Collections;
     uml
     comments
 
-    gros bug distances
 
     
 
 */
 
 
+// this class contains all the parameters of the simulation
 public class Simulation : MonoBehaviour
 {
     public static Simulation Instance = null;
@@ -90,36 +85,24 @@ public class Simulation : MonoBehaviour
     public int TurnDuration = 60; // in frames, at 60fps : 60 = 1s per turn
     public int FrameCpt = 0;
 
-    public int NbrPersons = 2;
-    public int NbrObstacles = 10;
-    public int NbrObjects = 20;
-    public int NbrAnimals = 3;
+    public int NbrPersons = 2; // number of persons
+    public int NbrObstacles = 10; // number of obstacles
+    public int NbrObjects = 20; // number of interactive objects (without obstacles and animals)
+    public int NbrAnimals = 3; // number of animals
 
+    // ratio emotional / cognitive
     public float EmotionalWeight = 1f;
     public float CognitiveWeight = 1f;
 
     public int Seed = 4242; // -1 if no seed
 
-    public bool InnateEnabled = true;
+    public bool InnateEnabled = true; // innate (somatic markers loaded at the beginning + "sensors" (looksGood, smellsBad, looksTerrifying,...))
 
-    public bool Playing = false;
+    public bool Playing = false; // currently playing or paused
 
 
-    Person desirabilityView = null;
+    Person desirabilityView = null; // displays "desirability map" of a person, null if "standard map"
 
-    public Person DesirabilityView
-    {
-        get
-        {
-            return desirabilityView;
-        }
-
-        set
-        {
-            if (value == null) Environment.Instance.DisplayStandardMap(); // back to standard map
-            desirabilityView = value;
-        }
-    }
 
     public Simulation()
     {
@@ -144,5 +127,24 @@ public class Simulation : MonoBehaviour
     private void FixedUpdate()
     {
         if(Playing) ++FrameCpt;
+    }
+
+
+
+
+
+
+    public Person DesirabilityView
+    {
+        get
+        {
+            return desirabilityView;
+        }
+
+        set
+        {
+            if (value == null) Environment.Instance.DisplayStandardMap(); // back to standard map
+            desirabilityView = value;
+        }
     }
 }

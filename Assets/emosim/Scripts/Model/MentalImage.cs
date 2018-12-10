@@ -2,6 +2,7 @@
 using System.Collections;
 
 // a mental image is a memory of an object, a situation,...
+// in this simulation we only handle mental image as the memory of an interactive object
 public class MentalImage
 {
     public const int TYPE_OBJECT = 0;
@@ -10,8 +11,9 @@ public class MentalImage
 
     int type;
     InteractiveObject objectRemembered;
-    Person personRemembered;
-    Need needRemembered;
+    Person personRemembered; // not implemented yet
+    Need needRemembered; // not implemented yet
+
 
     public MentalImage(int type, InteractiveObject objectRemembered)
     {
@@ -19,7 +21,7 @@ public class MentalImage
         this.objectRemembered = objectRemembered;
     }
 
-    // ... ?
+
 
     public InteractiveObject ObjectRemembered
     {

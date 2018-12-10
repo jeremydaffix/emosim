@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// this class represents the mind, and uses both an emotional and a cognitive part to make a decision
 public class Mind
 {
     Person person;
@@ -15,16 +16,14 @@ public class Mind
     }
 
 
+    // calculate the best action to do, according to the current context (objects seen, needs,...)
     public KeyValuePair<PersonAction, GameObject> TakeDecision()
     {
         KeyValuePair<PersonAction, GameObject> actionToDo = new KeyValuePair<PersonAction, GameObject>();
 
-        //Debug.Log("PERSON TURN");
+        person.EmotionalMachine.CalcEmotionalActions(); // calc a list of possible actions (each with a "score"), using the emotional part
+        person.CognitiveMachine.CalcCognitiveActions(); // calc a list of possible actions (each with a "score"), using the cognitive part
 
-        //mind.TakeDecision();
-
-        person.EmotionalMachine.CalcEmotionalActions();
-        person.CognitiveMachine.CalcCognitiveActions();
 
         // merging the 2 lists of possible actions !
 
@@ -39,7 +38,7 @@ public class Mind
             int mergedScore = cognitiveScore;
             PersonAction mergedAction = cognitiveAction;
 
-            // only in cognitive list : we add it "as it is"
+            // if only in cognitive list : we add it "as it is"
 
 
             if (mergedPossibleActions.ContainsKey(target)) // gameobject in both lists
@@ -86,7 +85,7 @@ public class Mind
 
 
 
-        // select the best action to do !
+        // select the best action to do ! (= best score)
 
         int bestScore = 0;
         GameObject bestTarget = person.gameObject;
@@ -113,12 +112,10 @@ public class Mind
             Environment.Instance.DisplayDesirabilityMap(mergedPossibleActions, bestScore);
         }
 
-        //bestAction(bestTarget);
-
 
         actionToDo = new KeyValuePair<PersonAction, GameObject>(bestAction, bestTarget);
 
-        return actionToDo;
+        return actionToDo; // aaand we return it as a pair : best action to do / object concerned
 
     }
     

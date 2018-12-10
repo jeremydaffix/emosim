@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+
+// this class contains a person / agent
 public class Person : MonoBehaviour
 {
     Mind mind; // decisions center
@@ -39,7 +41,7 @@ public class Person : MonoBehaviour
     public float LookRange = 3.0f; // how far we can see things
 
 
-    int deadSince = -1;
+    int deadSince = -1; // am I dead ?
 
     public Sprite skull;
 
@@ -47,6 +49,8 @@ public class Person : MonoBehaviour
 
     void Start()
     {
+        // instantiate everything
+
         EmotionalMachine = new EmotionalMachine();
         CognitiveMachine = new CognitiveMachine();
 
@@ -87,7 +91,7 @@ public class Person : MonoBehaviour
             KeyValuePair<PersonAction, GameObject> actionToDo = mind.TakeDecision(); // calc the best action
             actionToDo.Key(actionToDo.Value); // do the action, giving an optional target
 
-            ApplyNeeds();
+            ApplyNeeds(); // each turn the satisfaction of needs (satiety, health,...) decreases, so we have to fulfill them again
 
             CheckIfBlocked(lastPos, lastAction);
             lastPos = initPos;
@@ -112,11 +116,6 @@ public class Person : MonoBehaviour
             {
                 IsBlockedSince = Simulation.Instance.FrameCpt;
             }
-
-            /*else if((transform.position - initPos).magnitude >= 0.01f)
-            {
-                IsBlockedSince = 0;
-            }*/
         }
 
         else
@@ -134,8 +133,6 @@ public class Person : MonoBehaviour
         {
             kvp.Value.CurrentScore -= kvp.Value.DecreaseByTurn;
 
-            //Debug.Log(kvp.Key + " => " + kvp.Value.CurrentScore);
-
             if (kvp.Value.CurrentScore <= 0f)
             {
                 if(kvp.Key.Equals("health")) Die(kvp.Value); // health = 0 : RIP
@@ -146,6 +143,7 @@ public class Person : MonoBehaviour
     }
 
 
+    // RIP IN PEACE LITTLE ANGEL
     void Die(Need from)
     {
         //Destroy(gameObject, 3f);
@@ -161,13 +159,13 @@ public class Person : MonoBehaviour
 
 
 
-
+    /*
     void OnCollisionEnter2D(Collision2D collision)
     {
         //Debug.Log("COLLENTER");
 
-        //collidingWith = collision.gameObject;
-        //CollidingSince = Simulation.Instance.FrameCpt;
+        collidingWith = collision.gameObject;
+        CollidingSince = Simulation.Instance.FrameCpt;
     }
 
 
@@ -176,11 +174,12 @@ public class Person : MonoBehaviour
 
         //Debug.Log("COLLEXIT");
 
-        //CollidingWith = null;
-        //CollidingSince = 0;
-    }
+        CollidingWith = null;
+        CollidingSince = 0;
+    }*/
 
 
+    // select person for display
     private void OnMouseDown()
     {
         //Debug.Log("CLICK PERSON");
@@ -350,32 +349,7 @@ public class Person : MonoBehaviour
             personActions = value;
         }
     }
-
-    /*public GameObject CollidingWith
-    {
-        get
-        {
-            return collidingWith;
-        }
-
-        set
-        {
-            collidingWith = value;
-        }
-    }
-
-    public int CollidingSince
-    {
-        get
-        {
-            return collidingSince;
-        }
-
-        set
-        {
-            collidingSince = value;
-        }
-    }*/
+    
 
     public CognitiveMachine CognitiveMachine
     {

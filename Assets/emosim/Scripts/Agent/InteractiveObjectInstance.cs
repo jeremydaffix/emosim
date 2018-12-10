@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// this class contains an interactive object instance / agent
+// defined by a model of interactive object (see class InteractiveObject)
 public class InteractiveObjectInstance : MonoBehaviour
 {
     public string InteractiveObjectName; // nom exposé éditeur unity
@@ -41,12 +43,12 @@ public class InteractiveObjectInstance : MonoBehaviour
 
             //Debug.Log("OBJECT " + interactiveObject.ObjectName + " TURN");
 
-            if (interactiveObject.Type == InteractiveObject.TYPE_ANIMAL)
+            if (interactiveObject.Type == InteractiveObject.TYPE_ANIMAL) // animal -> we walk
             {
                 RandomWalk();
 
 
-                if (interactiveObject.NeedsSatisfied["health"] < 0) // dangereous animal
+                if (interactiveObject.NeedsSatisfied["health"] < 0) // dangereous animal !!! o
                 {
                     List<GameObject> l = LookForPersons(); // people too close -> attack!
 
@@ -64,6 +66,7 @@ public class InteractiveObjectInstance : MonoBehaviour
 
 
 
+    // randomly walk
     void RandomWalk(GameObject dontUse = null)
     {
         if (cptWalking <= 0)
@@ -83,7 +86,7 @@ public class InteractiveObjectInstance : MonoBehaviour
     }
 
     
-
+    // walk in the direction calculated with RandomWalk()
     void Walk()
     {
         Vector3 initPos = transform.position;
@@ -98,6 +101,7 @@ public class InteractiveObjectInstance : MonoBehaviour
     }
 
 
+    // detect close persons
     public List<GameObject> LookForPersons()
     {
         List<GameObject> l = new List<GameObject>();
@@ -114,7 +118,7 @@ public class InteractiveObjectInstance : MonoBehaviour
 
 
 
-
+    // click -> display data about that object
     private void OnMouseDown()
     {
         UIController.Instance.DisplayedObject = this;

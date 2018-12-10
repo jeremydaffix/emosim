@@ -1,5 +1,6 @@
 ﻿
 // an organ can be set in a specific state
+// basically it's juste a name + that current state
 public class Organ
 {
     string name;
@@ -10,6 +11,7 @@ public class Organ
         this.name = name;
         this.state = state;
     }
+
 
     public string Name
     {

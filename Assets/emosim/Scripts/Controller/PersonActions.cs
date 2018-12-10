@@ -3,28 +3,31 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public delegate void PersonAction(GameObject go);
+public delegate void PersonAction(GameObject go); // type for a person's action
 
 
+// this class contains the actions available for a person
 public class PersonActions
 {
-    public PersonAction /*ActionWalk,*/ ActionRandomWalk, ActionWalkToTarget, ActionEat, ActionFleeTarget;
+    public PersonAction ActionRandomWalk, ActionWalkToTarget, ActionEat, ActionFleeTarget;
 
 
-    Person person;
+    Person person; // the person we are attached to
 
+    // for walking
     int cptWalking = 0;
     Vector3 walkingDir = new Vector3();
 
+    // for drawing things
     LineRenderer lr;
     TextMesh tm;
+
 
 
     public PersonActions(Person p)
     {
         person = p;
 
-        //ActionWalk = Walk;
         ActionRandomWalk = RandomWalk;
         ActionWalkToTarget = WalkToTarget;
         ActionEat = Eat;
@@ -36,7 +39,6 @@ public class PersonActions
 
 
     // return all objects and persos we can see
-    // TODO detect with more senses (smell,...)
     public List<GameObject> LookForThings()
     {
         List<GameObject> l = new List<GameObject>();
@@ -70,7 +72,8 @@ public class PersonActions
 
     // ****
 
-
+    
+    // randomly walk
     void RandomWalk(GameObject dontUse = null)
     {
         if (cptWalking <= 0)
@@ -90,6 +93,7 @@ public class PersonActions
     }
 
 
+    // walk towards a target
     void WalkToTarget(GameObject target)
     {
         //Debug.Log("GOING TO " + target.GetComponent<InteractiveObjectInstance>().InteractiveObjectName);
@@ -108,6 +112,7 @@ public class PersonActions
         // 8EF301
     }
 
+    // flee a danger! (= walk faster in the opposite direction)
     void FleeTarget(GameObject target)
     {
         walkingDir = (target.transform.position - person.transform.position).normalized * -1.5f;
@@ -123,6 +128,7 @@ public class PersonActions
     }
 
 
+    // walk in the current direction
     void Walk(GameObject dontUse = null)
     {
         Vector3 initPos = person.transform.position;
@@ -139,17 +145,20 @@ public class PersonActions
     }
 
 
+    // eat an object
     void Eat(GameObject target)
     {
         InteractiveObjectInstance ioi = target.GetComponent<InteractiveObjectInstance>();
 
         if (ioi != null)
         {
+            // we trigger the perceptions and we save the result in the somatic memory
             person.EmotionalMachine.ResetPerceptions();
             person.EmotionalMachine.TasteObject(ioi.InteractiveObject);
             person.EmotionalMachine.SaveInSomaticMemory(ioi.InteractiveObject);
 
 
+            // apply the effects to the needs
             foreach (KeyValuePair<string, float> kvp in ioi.InteractiveObject.NeedsSatisfied)
             {
                 if (person.CognitiveMachine.Needs.ContainsKey(kvp.Key))
@@ -161,11 +170,13 @@ public class PersonActions
             }
 
 
-            Environment.Instance.RecycleInteractiveObject(ioi);
+            Environment.Instance.RecycleInteractiveObject(ioi); // move the object somewhere else
         }
 
         ClearGraphics();
 
+
+        // display some emotional feedback
 
         int score = person.EmotionalMachine.CalcMood();
         string txt;

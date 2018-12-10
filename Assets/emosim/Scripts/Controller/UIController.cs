@@ -5,7 +5,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
 
+
+// controller for the graphical interface
 public class UIController : MonoBehaviour {
+
+
+    // UI elements
 
     public GameObject CanvasNewSimu, CanvasPlay, CanvasObject, CanvasPerson, CanvasStats;
     public Text PersonsValue, ObjectsValue, AnimalsValue, ObstaclesValue, EmoValue, CognValue;
@@ -24,34 +29,9 @@ public class UIController : MonoBehaviour {
     public static UIController Instance;
 
 
-    Person displayedPerson = null;
-    InteractiveObjectInstance displayedObject = null;
+    Person displayedPerson = null; // person displayed after the user clicks it
+    InteractiveObjectInstance displayedObject = null; // object displayed after the user clicks it
 
-    public InteractiveObjectInstance DisplayedObject
-    {
-        get
-        {
-            return displayedObject;
-        }
-
-        set
-        {
-            displayedObject = value;
-        }
-    }
-
-    public Person DisplayedPerson
-    {
-        get
-        {
-            return displayedPerson;
-        }
-
-        set
-        {
-            displayedPerson = value;
-        }
-    }
 
 
 
@@ -75,6 +55,7 @@ public class UIController : MonoBehaviour {
 	}
 
 
+    // update the values of the labels in the parameters view
     public void RefreshParamsValues()
     {
         PersonsValue.text = ((int)PersonsSlider.value).ToString();
@@ -86,6 +67,8 @@ public class UIController : MonoBehaviour {
     }
 
 
+
+    // configure and start a simulation
     public void StartSimu()
     {
         Simulation.Instance.FrameCpt = 0;
@@ -117,6 +100,7 @@ public class UIController : MonoBehaviour {
 
 
 
+    // update the labels of the play view
     public void RefreshPlayValues()
     {
         SpeedLabel.text = (int)SpeedSlider.value + " turn/s";
@@ -127,18 +111,24 @@ public class UIController : MonoBehaviour {
         PauseButton.SetActive(Simulation.Instance.Playing);
     }
 
+
+    // continue the simulation
     public void PlaySimu()
     {
         Simulation.Instance.Playing = true;
         RefreshPlayValues();
     }
 
+
+    // pause the simulation
     public void PauseSimu()
     {
         Simulation.Instance.Playing = false;
         RefreshPlayValues();
     }
 
+
+    // stop the simulation and go back to the configuration view
     public void StopSimu()
     {
         Simulation.Instance.Playing = false;
@@ -154,6 +144,8 @@ public class UIController : MonoBehaviour {
     }
 
 
+
+    // display data about a person
     public void DisplayPerson()
     {
         if (DisplayedPerson != null)
@@ -200,6 +192,8 @@ public class UIController : MonoBehaviour {
         }
     }
 
+
+    // display data about an interactive object
     public void DisplayObject()
     {
         if (DisplayedObject != null)
@@ -245,6 +239,7 @@ public class UIController : MonoBehaviour {
     }
 
 
+    // close the display person view
     public void ClosePerson()
     {
         Environment.Instance.DisplayStandardMap();
@@ -252,8 +247,42 @@ public class UIController : MonoBehaviour {
         Simulation.Instance.DesirabilityView = null;
     }
 
+
+    // close the display object view
     public void CloseObject()
     {
         DisplayedObject = null;
+    }
+
+
+
+
+
+
+
+    public InteractiveObjectInstance DisplayedObject
+    {
+        get
+        {
+            return displayedObject;
+        }
+
+        set
+        {
+            displayedObject = value;
+        }
+    }
+
+    public Person DisplayedPerson
+    {
+        get
+        {
+            return displayedPerson;
+        }
+
+        set
+        {
+            displayedPerson = value;
+        }
     }
 }

@@ -2,14 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
+// this class contains an interactive object model
+// used by one or many instances (see class InteractiveObjectInstance)
 // an interactive object triggers some perceptions
 // which can then be translated to emotions
 // it can also satisfy some needs
 public class InteractiveObject
 
 {
-    // + tard : faire une factory !!!
-
     public const int TYPE_FOOD = 0;
     public const int TYPE_ANIMAL = 1;
     //public const int TYPE_MUSHROOM = 2;
@@ -21,14 +21,13 @@ public class InteractiveObject
     string objectName;
     int type;
     
-    List<string> triggerBySight = new List<string>();
-    List<string> triggerBySmell = new List<string>();
-    List<string> triggerByTaste = new List<string>();
+    List<string> triggerBySight = new List<string>(); // perceptions triggered when seen
+    List<string> triggerBySmell = new List<string>(); // perceptions triggered when smell
+    List<string> triggerByTaste = new List<string>(); // percetions triggered when tasted / eaten
 
-    Dictionary<string, float> needsSatisfied = new Dictionary<string, float>();
+    Dictionary<string, float> needsSatisfied = new Dictionary<string, float>(); // needs satisfied when eaten
 
 
-    float detectableFrom = 5.0f;
 
 
     public InteractiveObject(string n, int t, Sprite spr = null)
@@ -55,18 +54,6 @@ public class InteractiveObject
         }
     }
 
-    public float DetectableFrom
-    {
-        get
-        {
-            return detectableFrom;
-        }
-
-        set
-        {
-            detectableFrom = value;
-        }
-    }
     
 
     public int Type

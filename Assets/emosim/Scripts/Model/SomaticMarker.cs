@@ -7,9 +7,10 @@ public class SomaticMarker
     MentalImage mentalImage;
     List<Perception> perceptions = new List<Perception>();
 
-    // acquis : weight 3
-    // inné : weight 2
-    // imitation : weight 1
+    // learnt : weight 3
+    // innate : weight 2
+    // empathy : weight 1
+    // NOT USED YET
     int weight;
 
     public SomaticMarker(MentalImage mentalImage, int w = 2)

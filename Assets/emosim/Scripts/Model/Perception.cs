@@ -1,5 +1,5 @@
 ﻿
-// a perception is an organ in a specific state
+// a perception is just an organ in a specific state
 public class Perception
 {
     Organ organ;

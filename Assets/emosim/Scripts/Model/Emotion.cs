@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class Emotion  {
 
     string name;
-    List<Perception> perceptions = new List<Perception>();
+    List<Perception> perceptions = new List<Perception>(); // perceptions linked to the emotion
     int desirabilityScore; // 0 = neutral, -x = bad, +x= good
 
     public Emotion(string n, int score = 0)
