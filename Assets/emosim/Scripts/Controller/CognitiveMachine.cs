@@ -82,11 +82,13 @@ public class CognitiveMachine
 
 
 
+                    // BUG
+                    // (paliatif temporaire dans mind)
                     float sat = ioi.InteractiveObject.NeedsSatisfied["health"];
                     float cursc = Needs["health"].CurrentScore;
                     if (cursc <= 5f)
                     {
-                        score += Mathf.RoundToInt(sat * (10f - cursc) * (10f - cursc) * 5f); // the most the need is satisfied by the object, bigger the score
+                        //score += Mathf.RoundToInt(sat * (10f - cursc) * (10f - cursc) * 5f); // the most the need is satisfied by the object, bigger the score
                         //Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + "health");
                     }
                 

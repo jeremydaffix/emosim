@@ -81,7 +81,7 @@ public class Environment : MonoBehaviour
 
         InteractiveObjects["endive"] = new InteractiveObject("endive", InteractiveObject.TYPE_FOOD, fruitsAtlas[8]);
         InteractiveObjects["endive"].NeedsSatisfied.Add("satiety", 2f);
-        InteractiveObjects["endive"].NeedsSatisfied.Add("health", 1f);
+        InteractiveObjects["endive"].NeedsSatisfied.Add("health", 2f);
 
         InteractiveObjects["endive"].TriggerBySight.Add("looksNormal");
         InteractiveObjects["endive"].TriggerBySmell.Add("smellsBad");
@@ -119,7 +119,7 @@ public class Environment : MonoBehaviour
 
         InteractiveObjects["amanita"].TriggerBySight.Add("looksGood");
         InteractiveObjects["amanita"].TriggerBySmell.Add("smellsNormal");
-        InteractiveObjects["amanita"].TriggerByTaste.Add("tastesNormal");
+        InteractiveObjects["amanita"].TriggerByTaste.Add("tastesBad");
 
         InteractiveObjects["amanita"].TriggerByTaste.Add("wantToVomit");
         InteractiveObjects["amanita"].TriggerByTaste.Add("painHormones");

@@ -259,9 +259,12 @@ public class EmotionalMachine
         {
             if(sm.MentalImage.Type == MentalImage.TYPE_OBJECT && sm.MentalImage.ObjectRemembered == obj)
             {
+                //Debug.Log("REMEMBER " + obj.ObjectName); ;
+
                 foreach (Perception p in sm.Perceptions)
                 {
                     p.Organ.State = p.State;
+                    //Debug.Log(Perceptions);
                 }
             }
             
@@ -389,7 +392,7 @@ public class EmotionalMachine
                     if (lastEmotions.ElementAt(0).Key == emotions["fear"] && Vector3.Distance(person.transform.position, go.transform.position) <= (person.LookRange / 1.8f))
                     {
                         //Debug.Log("FLEE " + 20f * Simulation.Instance.EmotionalWeight);
-                        AddPossibleAction(go, Mathf.RoundToInt(50f * Simulation.Instance.EmotionalWeight + 30f), person.PersonActions.ActionFleeTarget);
+                        AddPossibleAction(go, Mathf.RoundToInt(10f * Simulation.Instance.EmotionalWeight + 2f), person.PersonActions.ActionFleeTarget);
                     }
 
                     // we are close enough to eat the object

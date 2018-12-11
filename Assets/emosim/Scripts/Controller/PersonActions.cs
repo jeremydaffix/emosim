@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 
 public delegate void PersonAction(GameObject go); // type for a person's action
@@ -179,6 +180,8 @@ public class PersonActions
         // display some emotional feedback
 
         int score = person.EmotionalMachine.CalcMood();
+        //Debug.Log("EAT " + person.EmotionalMachine.LastEmotions.ElementAt(0).Key.Name + " ; " + person.EmotionalMachine.LastEmotions.ElementAt(1).Key.Name);
+
         string txt;
         Color col;
 

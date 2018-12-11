@@ -55,14 +55,12 @@ public class Mind
                 if (emoAction == person.PersonActions.ActionFleeTarget)
                 {
 
-                    //if (emoScore >= cognitiveScore)
+                    if (emoScore >= cognitiveScore)
                     //if(Mathf.Abs(emoScore) >= Mathf.Abs(cognitiveScore)) // fear wins
                     {
                         mergedScore = emoScore;
                         mergedAction = emoAction;
-                        /*Debug.Log("***OLALAFEAR");
-                        Debug.Log(mergedScore);
-                        Debug.Log(mergedAction.Method.Name);*/
+     
                     }
 
                     //else // need to eat wins
@@ -79,7 +77,22 @@ public class Mind
                 }
 
             }
-            
+
+
+            // !!! paliatif temporaire pour bug sur l'impact des besoins urgents sur le choix
+            // permet de ne pas manger des trucs mauvais pour la santé si on est en trop mauvaise santé
+            // l'idéal serait que le "malus" dans cognitivemachine fonctionne sans bug
+
+            if (person.CognitiveMachine.Needs["health"].CurrentScore < 5f
+                && Simulation.Instance.CognitiveWeight > 0.5f &&
+                target.GetComponent<InteractiveObjectInstance>().InteractiveObject.NeedsSatisfied["health"] < 0f)
+                mergedScore = 0;
+
+            if (person.CognitiveMachine.Needs["health"].CurrentScore < 5f
+                && Simulation.Instance.CognitiveWeight > 0.5f &&
+                target.GetComponent<InteractiveObjectInstance>().InteractiveObject.NeedsSatisfied["health"] >= 2f)
+                            mergedScore *= 10;
+
 
             mergedPossibleActions[target] = new KeyValuePair<PersonAction, int>(mergedAction, mergedScore);
 
