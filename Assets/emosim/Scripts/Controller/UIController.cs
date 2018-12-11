@@ -23,7 +23,7 @@ public class UIController : MonoBehaviour {
     public Text SpeedLabel;
     public GameObject PlayButton, PauseButton;
 
-    public TextMeshProUGUI PersonTMP, ObjectTMP;
+    public TextMeshProUGUI PersonTMP, ObjectTMP, StatsTMP;
 
 
     public static UIController Instance;
@@ -43,6 +43,7 @@ public class UIController : MonoBehaviour {
         CanvasPlay.gameObject.SetActive(false);
         CanvasPerson.gameObject.SetActive(false);
         CanvasObject.gameObject.SetActive(false);
+        CanvasStats.gameObject.SetActive(false);
 
         RefreshParamsValues();
 	}
@@ -52,6 +53,7 @@ public class UIController : MonoBehaviour {
 
         DisplayPerson();
         DisplayObject();
+        DisplayStats();
 	}
 
 
@@ -92,6 +94,7 @@ public class UIController : MonoBehaviour {
         CanvasPlay.gameObject.SetActive(true);
         CanvasPerson.gameObject.SetActive(false);
         CanvasObject.gameObject.SetActive(false);
+        CanvasStats.gameObject.SetActive(true);
 
         Simulation.Instance.Playing = true;
         RefreshPlayValues();
@@ -139,6 +142,7 @@ public class UIController : MonoBehaviour {
         CanvasPlay.gameObject.SetActive(false);
         CanvasPerson.gameObject.SetActive(false);
         CanvasObject.gameObject.SetActive(false);
+        CanvasStats.gameObject.SetActive(false);
 
         RefreshParamsValues();
     }
@@ -151,6 +155,7 @@ public class UIController : MonoBehaviour {
         if (DisplayedPerson != null)
         {
             CanvasPerson.gameObject.SetActive(true);
+            CanvasStats.gameObject.SetActive(false);
 
             // map
             // needs
@@ -199,6 +204,7 @@ public class UIController : MonoBehaviour {
         if (DisplayedObject != null)
         {
             CanvasObject.gameObject.SetActive(true);
+            CanvasStats.gameObject.SetActive(false);
 
             string txt = "";
 
@@ -237,6 +243,90 @@ public class UIController : MonoBehaviour {
             CanvasObject.gameObject.SetActive(false);
         }
     }
+
+
+    // display data about the simulation
+    public void DisplayStats()
+    {
+        if (DisplayedObject == null && DisplayedPerson == null && !CanvasNewSimu.gameObject.activeSelf)
+        {
+            CanvasStats.gameObject.SetActive(true);
+
+            // average needs
+            // total / average SM
+            // average mood (after eating, neutral after walk?)
+            // turns
+            // living / dead
+            // kms
+
+            string txt = "";
+
+
+            float totalSatiety = 0f;
+            float totalHealth = 0f;
+
+            int totalSM = 0;
+
+            float totalMood = 0f;
+
+            int nbr = Environment.Instance.Persons.Count;
+            int rip = 0;
+
+            int turn = (Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration);
+
+            int totalLife = 0;
+
+
+            // sum for all persons
+            foreach (Person p in Environment.Instance.Persons)
+            {
+
+                if (p.CognitiveMachine != null && p.CognitiveMachine.Needs.Keys.Contains("satiety")) totalSatiety += p.CognitiveMachine.Needs["satiety"].CurrentScore;
+                if (p.CognitiveMachine != null && p.CognitiveMachine.Needs.Keys.Contains("health")) totalHealth += p.CognitiveMachine.Needs["health"].CurrentScore;
+
+                if (p.EmotionalMachine != null) totalSM += p.EmotionalMachine.SomaticMemory.Count;
+                if (p.EmotionalMachine != null) totalMood += p.EmotionalMachine.CalcMood();
+
+                if (p.DeadSince != -1)
+                {
+                    rip++;
+
+                    totalLife += p.DeadSince;
+                }
+
+                else
+                {
+                    totalLife += turn;
+                }
+
+            }
+
+
+            txt += "<b>Turns:</b>\n";
+            txt += "  " + turn + "\n";
+
+            txt += "<b>Population:</b>\n";
+            txt += "  living = " + (nbr - rip) + "\n";
+            txt += "  dead = " + rip + "\n";
+            txt += "  life exp. = " + (totalLife / nbr).ToString("0.0") + "\n";
+
+            txt += "<b>Avg Needs ( / 10):</b>\n";
+            txt += "  satiety" + " = " + (totalSatiety / nbr).ToString("0.0") + "\n";
+            txt += "  health" + " = " + (totalHealth / nbr).ToString("0.0") + "\n";
+
+            txt += "<b>Somatic Markers:</b>\n";
+            txt += "  total" + " = " + totalSM + "\n";
+            txt += "  avg" + " = " + (totalSM / nbr).ToString("0.0") + "\n";
+
+            txt += "<b>Avg Mood:</b>\n";
+            txt += "  " + (totalMood / nbr).ToString("0.0") + "\n";
+
+
+            StatsTMP.text = txt;
+        }
+        
+    }
+
 
 
     // close the display person view

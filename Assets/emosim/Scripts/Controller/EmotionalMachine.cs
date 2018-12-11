@@ -18,8 +18,12 @@ public class EmotionalMachine
 
     Dictionary<Emotion, int> lastEmotions = new Dictionary<Emotion, int>(); // last emotions calculated
 
+    // for empathy / learning from others, we store the last eaten object until the next turn
+    InteractiveObject lastInteractiveObjectEaten = null;
+    List<string> lastPerceptionsFromObjectEaten = new List<string>();
 
-     Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>(); // possible actions (returned to mind)
+
+    Dictionary<GameObject, KeyValuePair<PersonAction, int>> possibleActions = new Dictionary<GameObject, KeyValuePair<PersonAction, int>>(); // possible actions (returned to mind)
 
 
     public void Create(Person p)
@@ -213,6 +217,11 @@ public class EmotionalMachine
     // trigger the perceptions by tasting / eating an object
     public void TasteObject(InteractiveObject obj)
     {
+        // stored 1 turn to simulate empathy / learning from others
+        LastInteractiveObjectEaten = obj;
+
+
+
         if (Simulation.Instance.InnateEnabled)
         {
             foreach (string s in obj.TriggerByTaste)
@@ -222,9 +231,22 @@ public class EmotionalMachine
                     Perception p = Perceptions[s];
 
                     p.Organ.State = p.State;
+
+
+                    // empathy : we can only show to others some perceptions
+                    // our face, our posture and our eyes (crying or not crying)
+                    // but they can't see things like heart beat, stomach, etc
+                    if(p.Organ == person.Face || p.Organ == person.Posture || p.Organ == person.Eyes)
+                    {
+                        LastPerceptionsFromObjectEaten.Add(s);
+                        //Debug.Log("SHOW TO OTHERS FOR " + obj.ObjectName + " -> " + s);
+                    }
                 }
             }
         }
+
+
+
     }
 
 
@@ -262,6 +284,24 @@ public class EmotionalMachine
         }
 
         person.EmotionalMachine.RememberObject(obj);
+    }
+
+
+    // we have seen someone showing some visible perceptions eating an object
+    // and we learn from that!
+    public void LearnFromOther(InteractiveObject obj, List<string> perceptions)
+    {
+        person.EmotionalMachine.ResetPerceptions();
+
+        foreach(string name in perceptions)
+        {
+            Perception p = Perceptions[name];
+            p.Organ.State = p.State;
+
+            //Debug.Log("LEARN THAN " + obj.ObjectName + " = " + name);
+        }
+
+        SaveInSomaticMemory(obj); // and we save that to somatic memory
     }
 
 
@@ -321,6 +361,10 @@ public class EmotionalMachine
 
         PossibleActions.Clear();
 
+        // for empathy / learning from others, we store the last eaten object until the next turn (and 1 turn only)
+        lastInteractiveObjectEaten = null;
+        LastPerceptionsFromObjectEaten.Clear();
+
 
         foreach (GameObject go in canSee) // for each object we can see
         {
@@ -344,7 +388,8 @@ public class EmotionalMachine
                     // fear : flee action
                     if (lastEmotions.ElementAt(0).Key == emotions["fear"] && Vector3.Distance(person.transform.position, go.transform.position) <= (person.LookRange / 1.8f))
                     {
-                        AddPossibleAction(go, Mathf.RoundToInt(20f * Simulation.Instance.EmotionalWeight), person.PersonActions.ActionFleeTarget);
+                        //Debug.Log("FLEE " + 20f * Simulation.Instance.EmotionalWeight);
+                        AddPossibleAction(go, Mathf.RoundToInt(50f * Simulation.Instance.EmotionalWeight + 30f), person.PersonActions.ActionFleeTarget);
                     }
 
                     // we are close enough to eat the object
@@ -364,7 +409,13 @@ public class EmotionalMachine
 
             else // we see a person
             {
-                // apprentissage ici !!!
+                // learning here!!!
+
+                // the person ate a thing 1 turn ago and is showing some visible perceptions ! (face, posture, crying,...)
+                if(p != null && p.EmotionalMachine.lastInteractiveObjectEaten != null) 
+                {
+                    LearnFromOther(p.EmotionalMachine.LastInteractiveObjectEaten, p.EmotionalMachine.LastPerceptionsFromObjectEaten);
+                }
             }
         }
 
@@ -439,5 +490,30 @@ public class EmotionalMachine
             perceptions = value;
         }
     }
-    
+
+    public InteractiveObject LastInteractiveObjectEaten
+    {
+        get
+        {
+            return lastInteractiveObjectEaten;
+        }
+
+        set
+        {
+            lastInteractiveObjectEaten = value;
+        }
+    }
+
+    public List<string> LastPerceptionsFromObjectEaten
+    {
+        get
+        {
+            return lastPerceptionsFromObjectEaten;
+        }
+
+        set
+        {
+            lastPerceptionsFromObjectEaten = value;
+        }
+    }
 }

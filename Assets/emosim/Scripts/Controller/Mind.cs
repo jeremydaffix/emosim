@@ -54,15 +54,20 @@ public class Mind
                 // we take the best score
                 if (emoAction == person.PersonActions.ActionFleeTarget)
                 {
-                    if(emoScore >= cognitiveScore) // fear wins
+
+                    //if (emoScore >= cognitiveScore)
+                    //if(Mathf.Abs(emoScore) >= Mathf.Abs(cognitiveScore)) // fear wins
                     {
                         mergedScore = emoScore;
                         mergedAction = emoAction;
+                        /*Debug.Log("***OLALAFEAR");
+                        Debug.Log(mergedScore);
+                        Debug.Log(mergedAction.Method.Name);*/
                     }
 
-                    else // need to eat wins
+                    //else // need to eat wins
                     {
-                        mergedScore -= emoScore; // but with a malus
+                        //mergedScore -= emoScore; // but with a malus
                     }
                 }
 
@@ -79,10 +84,7 @@ public class Mind
             mergedPossibleActions[target] = new KeyValuePair<PersonAction, int>(mergedAction, mergedScore);
 
         }
-
-
-
-
+       
 
 
         // select the best action to do ! (= best score)
@@ -112,9 +114,12 @@ public class Mind
             Environment.Instance.DisplayDesirabilityMap(mergedPossibleActions, bestScore);
         }
 
+        //Debug.Log(bestAction.Method.Name + " -> " + bestScore);
+        //if(bestTarget != null && bestTarget.GetComponent<InteractiveObjectInstance>() != null) Debug.Log("(" + bestTarget.GetComponent<InteractiveObjectInstance>().InteractiveObjectName + ")");
+
 
         actionToDo = new KeyValuePair<PersonAction, GameObject>(bestAction, bestTarget);
-
+        
         return actionToDo; // aaand we return it as a pair : best action to do / object concerned
 
     }

@@ -153,7 +153,7 @@ public class Person : MonoBehaviour
 
         DeadSince = Simulation.Instance.FrameCpt / Simulation.Instance.TurnDuration;
 
-        Debug.Log("DIE FROM " + from.Name);
+        //Debug.Log("DIE FROM " + from.Name);
     }
 
 
@@ -389,4 +389,6 @@ public class Person : MonoBehaviour
             deadSince = value;
         }
     }
+
+
 }

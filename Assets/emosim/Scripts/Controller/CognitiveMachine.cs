@@ -69,24 +69,38 @@ public class CognitiveMachine
 
                     // weight with needs (KNOWLEDGE of what is "good" for you)
 
-                    foreach (KeyValuePair<string, Need> kvp in Needs)
+                    /*foreach (KeyValuePair<string, Need> kvp in Needs)
                     {
                         float sat = ioi.InteractiveObject.NeedsSatisfied[kvp.Key];
 
-                        if (kvp.Value.CurrentScore < 5f /*&& sat > 0f*/) // need trigger!
+                        if (kvp.Value.CurrentScore < 5f ) // need trigger!
                         {
-                            score += Mathf.RoundToInt(sat * sat * sat * 10f); // the most the need is satisfied by the object, bigger the score
-                            //Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
+                            score += Mathf.RoundToInt(sat * (10f - kvp.Value.CurrentScore) * (10f - kvp.Value.CurrentScore)); // the most the need is satisfied by the object, bigger the score
+                            Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + kvp.Key); // attention au changement de signe
                         }
-                    }
+                    }*/
 
+
+
+                    float sat = ioi.InteractiveObject.NeedsSatisfied["health"];
+                    float cursc = Needs["health"].CurrentScore;
+                    if (cursc <= 5f)
+                    {
+                        score += Mathf.RoundToInt(sat * (10f - cursc) * (10f - cursc) * 5f); // the most the need is satisfied by the object, bigger the score
+                        //Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + score + " for " + "health");
+                    }
+                
 
 
                     // weight with distance (further -> less attractive)
 
                     float dist = Vector3.Distance(person.transform.position, go.transform.position);
-                    score += (-1 * (int)dist);
+                    
+                    score += (int)(-1.0f * dist);
 
+                   // Debug.Log("ADDING " + ioi.InteractiveObjectName + " " + (-1 * (int)dist) + " for DISTANCE");
+
+    
 
 
                     if (dist <= 1f)

@@ -51,26 +51,18 @@ using System.Collections;
     Difficultés :
 
     Fusion de perceptions de différentes sources
+    Equilibrage
+    Frontières inné / acquis, emotionel / cognitif,...
 
 
 
     TODO
 
-    pb needs
-    empathie / apprentissage autrui
-    gros bug distances
-
-
-    stats
-
+    pb needs & dist
     équilibrer
     voir si les scénarios marchent
 
-    slides
-    uml
-    comments
-
-
+    
     
 
 */
@@ -127,6 +119,9 @@ public class Simulation : MonoBehaviour
     private void FixedUpdate()
     {
         if(Playing) ++FrameCpt;
+
+
+        
     }
 
 

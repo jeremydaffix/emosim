@@ -130,7 +130,7 @@ public class Environment : MonoBehaviour
 
 
         InteractiveObjects["snake"] = new InteractiveObject("snake", InteractiveObject.TYPE_ANIMAL, snake);
-        InteractiveObjects["snake"].NeedsSatisfied.Add("satiety", 3f);
+        InteractiveObjects["snake"].NeedsSatisfied.Add("satiety", 1f);
         InteractiveObjects["snake"].NeedsSatisfied.Add("health", -8f); // a skake bites :(
 
         // a snake is SCARY
